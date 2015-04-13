@@ -1,0 +1,55 @@
+
+.endpoints {
+  padding-top: 110px;
+
+  &__header {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    margin-left: 90px;
+    line-height: 48px;
+    color: @body-second-color;
+    font-weight: bold;
+    border-bottom: 1px solid @border-color;
+
+    &__name {
+      width: 160px;
+    }
+
+    &__url {
+    }
+  }
+
+  &__items {
+    padding-top: 48px;
+
+    &__item {
+      display: flex;
+      position: relative;
+      padding: 16px 0 16px 20px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: @menu-item-hover-color;
+      }
+
+      &__mark {
+        width: 70px;
+        padding: 10px 0 0 10px;
+        color: @accent-1-color;
+      }
+
+      &__name {
+        font-weight: bold;
+        line-height: 48px;
+        width: 160px;
+      }
+
+      &__url {
+        line-height: 48px;
+        margin-right: auto;
+      }
+    }
+  }
+}
+
