@@ -7,9 +7,11 @@ export default {
   Edit: '編集',
   Endpoint: 'エンドポイント',
   Endpoints: 'エンドポイント一覧',
+  Entities: 'エンティティ一覧',
   Login: 'ログイン',
   Logout: 'ログアウト',
   Name: '名前',
+  Others: 'その他',
   Save: '保存',
   Unauthorized: '認証していません',
 
@@ -23,7 +25,7 @@ export default {
   'Select an authorization type': '認証方法を選んでください',
   'Login failed': 'ログインに失敗しました',
 
-  SiteTitle: 'React Manager',
+  'site.title': 'React Manager',
 
   tv4: {
     INVALID_TYPE: "正しい{type}の形式で入力してください",

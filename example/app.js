@@ -118,10 +118,6 @@ app.get('/config', requireAuth, function(req, res) {
 
   res.json({
 
-    site: {
-      title: 'Example App'
-    },
-
     entities: [{
       id: 'user',
       schema: {
@@ -246,7 +242,10 @@ app.get('/config', requireAuth, function(req, res) {
         height: 'Height',
         duration: 'Duration',
         image: 'Image',
-        video: 'Video'
+        video: 'Video',
+        site: {
+          title: 'Example App',
+        },
       },
       ja: {
         company: '会社',
@@ -270,7 +269,10 @@ app.get('/config', requireAuth, function(req, res) {
         height: '高さ',
         duration: '保存期間',
         image: 'イメージ',
-        video: 'ビデオ'
+        video: 'ビデオ',
+        site: {
+          title: 'サンプルアプリ',
+        },
       }
     },
 

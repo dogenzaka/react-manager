@@ -21,6 +21,7 @@ export default (
       <DefaultRoute handler={LoginStrategies} />
     </Route>
     <Route name="logout" path="/logout" handler={Logout} />
+    <Route name="entity" path="/entity/:id" handler={Index} />
     <DefaultRoute name="index" handler={Index} />
   </Route>
 );

@@ -10,11 +10,8 @@ export default React.createClass({
 
   mixins: [Navigation, AuthMixin],
 
-  componentDidMount() {
-    setTitle(i18n('SiteTitle'));
-  },
-
-  componentWillUnmount() {
+  componentWillMount() {
+    setTitle(i18n('site.title'));
   },
 
   render() {
