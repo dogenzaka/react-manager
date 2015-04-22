@@ -20,7 +20,7 @@ gulp.task('webpack', function() {
     devtool: production ? '' : 'inline-source-map',
     module: {
       loaders: [
-        { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' }
+        { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?stage=0' }
       ]
     },
     resolve: {

@@ -1,11 +1,29 @@
 
 export default {
 
-  'add an endpoint': 'エンドポイント追加',
-  cancel: 'キャンセル',
+  // Words
+  Cancel: 'キャンセル',
+  Delete: '削除',
+  Edit: '編集',
+  Endpoint: 'エンドポイント',
+  Endpoints: 'エンドポイント一覧',
+  Login: 'ログイン',
+  Logout: 'ログアウト',
+  Name: '名前',
+  Save: '保存',
+  Unauthorized: '認証していません',
+
+  // Labels
   name: '名前',
-  save: '保存',
+  password: 'パスワード',
   url: 'URL',
+  username: 'ユーザーID',
+
+  'Add an endpoint': 'エンドポイント追加',
+  'Select an authorization type': '認証方法を選んでください',
+  'Login failed': 'ログインに失敗しました',
+
+  SiteTitle: 'React Manager',
 
   tv4: {
     INVALID_TYPE: "正しい{type}の形式で入力してください",

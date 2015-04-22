@@ -15,7 +15,7 @@ export default React.createClass({
     AppStore.addListener(this._setState);
   },
 
-  componentDidUnmount() {
+  componentWillUnmount() {
     AppStore.removeListener(this._setState);
   },
 

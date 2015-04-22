@@ -11,13 +11,6 @@ class FloatingMenuStore extends BaseStore {
     super();
   }
 
-  registerDispatcher(dispatcher) {
-    // Register to dispatcher
-    dispatcher.activateFloatingMenu(opts => {
-      this.activate(opts);
-    });
-  }
-
 }
 
 export default new FloatingMenuStore();

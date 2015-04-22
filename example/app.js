@@ -10,13 +10,11 @@ var passport = require('passport');
 var crypto = require('crypto');
 
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-var GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-var GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL;
-var tokenStrage = [];
+var LocalStrategy = require('passport-local').Strategy;
+
+var userStorage = {};
 
 app.use(bodyParser.json());
-
 app.use(function(req, res, next) {
   res.set('Access-Control-Allow-Origin', '*');
   next();
@@ -30,137 +28,93 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-/*
-passport.use(new GoogleStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: GOOGLE_CALLBACK_URL
-  },
-  function(accessToken, refreshToken, profile, done) {
+/**
+ * Local authentication
+ */
+passport.use(new LocalStrategy(function(username, password, done) {
+  if (username === 'admin' && password === 'password') {
+    var sha1 = crypto.createHash('sha1');
+    sha1.update(username = '_' + password + '_salt12345');
+    var token = sha1.digest('hex');
+    var user = { id: 'admin', name: 'admin', email: '', token: token };
+    userStorage[token] = user;
+    done(null, user);
+  } else {
+    done(null, false, { message: 'Invalid password' });
+  }
+}));
+
+/**
+ * Google Authentication
+ */
+if (process.env.GOOGLE_CLIENT_ID) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_REDIRECT_URI
+  }, function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
     process.nextTick(function () {
-
-      var sha1 = crypto.createHash('sha1');
-      sha1.update(accessToken);
-      var tokenHash = sha1.digest('hex');
-      tokenStrage.push(tokenHash);
-      profile.tokenHash = tokenHash;
-      return done(null, profile);
+      var token = crypto.createHash('sha1').update(accessToken).digest('hex');
+      var photo = profile.photos[0].value;
+      photo = photo.replace(/sz\=50/,'sz=120');
+      var user = {
+        id: profile.id,
+        name: profile.displayName,
+        token: token,
+        photo: photo,
+      };
+      userStorage[token] = user;
+      return done(null, user);
     });
-  }
-));
-*/
+  }));
+}
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.get('/auth', function(req, res) {
+  res.json({
+    strategies: [{
+      name: 'Local',
+      type: 'password'
+    },{
+      name: 'Google',
+      type: 'google',
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      redirectUri: process.env.GOOGLE_REDIRECT_URI,
+      scope: ''
+      //scope: 'https://www.googleapis.com/auth/plus.login'
+    }]
+  });
+});
 
 var specs = {
-  user: {
-    id: 'user',
-    schema: {
-      type: 'object',
-      properties: {
-        userId: { type: 'string', maxLength: 100, minLength: 1 },
-        firstName: { type: 'string', maxLength: 100, minLength: 1 },
-        lastName: { type: 'string', maxLength: 100, minLength: 1 },
-        gender: { type: 'string', enum: ['male','female']},
-        email: { type: 'string', style: 'long' },
-        phone: 'string',
-        createdAt: { type: 'string', format: 'date' },
-      },
-      primaryKey: ['userId'],
-      required: ['userId','firstName','lastName']
-    },
-
-    features: {
-      list: {
-        fields: [
-          { id: 'userId', style: { width: '120px' }},
-          'firstName',
-          'lastName',
-          'email',
-          'phone',
-          { id: 'createdAt', format: 'short-date' },
-          {
-            id: 'userIcon',
-            preview: {
-              type: 'image',
-              url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.png'
-            }
-          },
-          { id: 'createdAt', type: 'date', format: 'short' }
-        ]
-      },
-      download: true,
-      upload: true
-    }
-  },
-
-  company: {
-    id: 'company',
-    schema: {
-      type: 'object',
-      properties: {
-        companyId: { type: 'string', maxLength: 100, minLength: 1 },
-        name: { type: 'string', maxLength: 100, minLength: 1 },
-        phrase: 'string',
-        country: 'string',
-        address: {
-          type: 'object',
-          properties: {
-            zipCode: 'string',
-            city: 'string',
-            streetAddress: 'string'
-          }
-        }
-      },
-      primaryKey: ['companyId'],
-      required: ['companyId', 'name']
-    },
-
-    features: {
-      list: {
-        fields: [
-          'companyId',
-          'name',
-          {
-            id:'country',
-            filter: {
-              items: ['Japan','Nepal','India']
-            }
-          },
-          'address.city',
-          {
-            id: 'video',
-            preview: {
-              type: 'video',
-              url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.m3u8'
-            }
-          }
-        ]
-      },
-      previews: [
-      ],
-      search: {
-        schema: {
-          type: 'object',
-          properties: {
-            companyId: { type: 'string' },
-            country: {
-              type: 'string',
-              enum: ['Japan','Nepal','India']
-            },
-            zipCode: 'number',
-            city: 'string',
-            streetAddress: 'string'
-          }
-        }
-      }
-    }
-  }
 };
 
-app.get('/config', function(req, res) {
+var requireAuth = function(req, res, next) {
+  var token = req.get('x-rm-token');
+  if (!token) {
+    res.status(401).end();
+    return;
+  }
+  var user = userStorage[token];
+  if (!user) {
+    res.status(401).end();
+    return;
+  }
+  req.user = user;
+  next();
+};
+
+app.use(passport.initialize());
+// Login with token header
+app.use(function(req, res, next) {
+  var token = req.get('x-rm-token');
+  if (token) {
+    req.user = userStorage[token];
+  }
+  next();
+});
+
+app.get('/config', requireAuth, function(req, res) {
 
   res.json({
 
@@ -168,7 +122,106 @@ app.get('/config', function(req, res) {
       title: 'Example App'
     },
 
-    entities: _.values(specs),
+    entities: [{
+      id: 'user',
+      schema: {
+        type: 'object',
+        properties: {
+          userId: { type: 'string', maxLength: 100, minLength: 1 },
+          firstName: { type: 'string', maxLength: 100, minLength: 1 },
+          lastName: { type: 'string', maxLength: 100, minLength: 1 },
+          gender: { type: 'string', enum: ['male','female']},
+          email: { type: 'string', style: 'long' },
+          phone: 'string',
+          createdAt: { type: 'string', format: 'date' },
+        },
+        primaryKey: ['userId'],
+        required: ['userId','firstName','lastName']
+      },
+      features: {
+        list: {
+          fields: [
+            { id: 'userId', style: { width: '120px' }},
+            'firstName',
+            'lastName',
+            'email',
+            'phone',
+            { id: 'createdAt', format: 'short-date' },
+            {
+              id: 'userIcon',
+              preview: {
+                type: 'image',
+                url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.png'
+              }
+            },
+            { id: 'createdAt', type: 'date', format: 'short' }
+          ]
+        },
+        download: true,
+        upload: true
+      }
+    }, {
+      id: 'company',
+      schema: {
+        type: 'object',
+        properties: {
+          companyId: { type: 'string', maxLength: 100, minLength: 1 },
+          name: { type: 'string', maxLength: 100, minLength: 1 },
+          phrase: 'string',
+          country: 'string',
+          address: {
+            type: 'object',
+            properties: {
+              zipCode: 'string',
+              city: 'string',
+              streetAddress: 'string'
+            }
+          }
+        },
+        primaryKey: ['companyId'],
+        required: ['companyId', 'name']
+      },
+
+      features: {
+        list: {
+          fields: [
+            'companyId',
+            'name',
+            {
+              id:'country',
+              filter: {
+                items: ['Japan','Nepal','India']
+              }
+            },
+            'address.city',
+            {
+              id: 'video',
+              preview: {
+                type: 'video',
+                url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.m3u8'
+              }
+            }
+          ]
+        },
+        previews: [
+        ],
+        search: {
+          schema: {
+            type: 'object',
+            properties: {
+              companyId: { type: 'string' },
+              country: {
+                type: 'string',
+                enum: ['Japan','Nepal','India']
+              },
+              zipCode: 'number',
+              city: 'string',
+              streetAddress: 'string'
+            }
+          }
+        }
+      }
+    }],
 
     i18n: {
       en: {
@@ -221,47 +274,44 @@ app.get('/config', function(req, res) {
       }
     },
 
-    auth: [
-      {
-        name: 'google',
-        type: 'oauth2',
-        url: '/oauth/google'
-      }
-    ]
-
   });
 
 });
 
 app.get('/oauth/google',
-  passport.authenticate('google', { scope: [
-    //'https://www.googleapis.com/auth/plus.login',
-    'https://www.googleapis.com/auth/plus.profile.emails.read'
-  ]})
+  passport.authenticate('google', {
+    scope: [
+      //'https://www.googleapis.com/auth/plus.login',
+      'https://www.googleapis.com/auth/plus.profile.emails.read',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ].join(' ')
+  })
 );
-
-/*
-app.get('/auth/google',
-  passport.authenticate('google', { scope: [
-    'https://www.googleapis.com/auth/userinfo.profile'
-  ]}),
-  function(req, res){
-    // The request will be redirected to Google for authentication, so this
-    // function will not be called.
-  }
-);
-*/
 
 app.get('/oauth/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/login'
   }),
   function(req, res) {
-    res.redirect('/#/?token=' + req.user.tokenHash);
+    res.redirect('/#/login/token/' + req.user.token);
   }
 );
 
-app.get('/logout', function(req, res){
+app.post('/login',
+  passport.authenticate('local'),
+  function(req, res) {
+    res.json({ token: req.user.token });
+  });
+
+app.get('/user', requireAuth, function(req, res) {
+  res.json({
+    id: req.user.id,
+    name: req.user.name,
+    photo: req.user.photo,
+  });
+});
+
+app.get('/logout', function(req, res) {
   req.logout();
   res.status(200).end();
 });
@@ -289,15 +339,12 @@ var find = function(kind, keys) {
 };
 
 var search = function(kind, q){
-
   // your search method here
   var list  = data[kind];
   return list;
-
 };
 
 var filter = function(kind, q){
-
   var list = data[kind];
   if(list){
     return _.where(list, q);
@@ -314,18 +361,13 @@ var remove = function(kind, keys) {
   return;
 };
 
-app.get('/entity/:kind', function(req, res) {
+app.get('/entity/:kind', requireAuth, function(req, res) {
 
   var kind = req.params.kind;
   var limit = Number(req.query.limit) || 20;
   var offset = Number(req.query.offset) || 0;
 
   var spec = specs[kind];
-
-  var token = req.header('X-XSRF-TOKEN');
-  if(!token || tokenStrage.indexOf(token) < 0){
-    return res.status(401).end();
-  }
 
   if (!spec) {
     return res.status(404).end();
@@ -342,7 +384,7 @@ app.get('/entity/:kind', function(req, res) {
   });
 });
 
-app.get('/entity/:kind/:keys', function(req, res) {
+app.get('/entity/:kind/:keys', requireAuth, function(req, res) {
   var kind = req.params.kind;
   var keys = req.params.keys.split(',');
   var item = find(kind, keys);
@@ -353,7 +395,7 @@ app.get('/entity/:kind/:keys', function(req, res) {
   }
 });
 
-app.put('/entity/:kind/:keys', function(req, res) {
+app.put('/entity/:kind/:keys', requireAuth, function(req, res) {
   var kind = req.params.kind;
   var keys = req.params.keys.split(',');
   var item = find(kind, keys);
@@ -374,7 +416,7 @@ app.put('/entity/:kind/:keys', function(req, res) {
 
 });
 
-app.put('/entity/:kind/:keys/:field', function(req, res) {
+app.put('/entity/:kind/:keys/:field', requireAuth, function(req, res) {
   var kind = req.params.kind;
   var keys = req.params.keys.split(',');
   var field = req.params.field;
@@ -387,7 +429,7 @@ app.put('/entity/:kind/:keys/:field', function(req, res) {
   }
 });
 
-app.delete('/entity/:kind/:keys', function(req, res) {
+app.delete('/entity/:kind/:keys', requireAuth, function(req, res) {
   var kind = req.params.kind;
   var keys = req.params.keys.split(',');
   var item = find(kind, keys);
@@ -399,7 +441,7 @@ app.delete('/entity/:kind/:keys', function(req, res) {
   }
 });
 
-app.get('/search/entity/:kind', function(req, res) {
+app.get('/search/entity/:kind', requireAuth, function(req, res) {
 
   var kind = req.params.kind;
   var limit = Number(req.query.limit) || 20;
@@ -423,7 +465,7 @@ app.get('/search/entity/:kind', function(req, res) {
   });
 });
 
-app.get('/filter/entity/:kind', function(req, res) {
+app.get('/filter/entity/:kind', requireAuth, function(req, res) {
 
   var kind = req.params.kind;
   var limit = Number(req.query.limit) || 20;

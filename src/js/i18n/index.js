@@ -53,7 +53,6 @@ let resolve = function(key) {
   if (!target) {
     target = messages[defaultLang];
   }
-  key = key.toLowerCase();
   return (target && target[key]) || key;
 };
 
@@ -89,4 +88,4 @@ resolve.setLanguage = function(lang) {
 });
 tv4.language(currentLang);
 
-module.exports = resolve;
+export default resolve;

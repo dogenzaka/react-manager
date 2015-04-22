@@ -33,7 +33,7 @@ export default React.createClass({
   componentDidMount() {
   },
 
-  componentDidUnmount() {
+  componentWillUnmount() {
   },
 
   componentClickAway() {

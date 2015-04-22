@@ -10,7 +10,13 @@ export default class BaseStore {
   constructor() {
     this.state = this.getInitialState();
     this.listeners = [];
-    this.registerDispatcher(dispatcher);
+    // register to dispatcher
+    _.each(dispatcher, (register, name) => {
+      let method = this[name];
+      if (method && typeof method === 'function') {
+        register.on(method.bind(this));
+      }
+    });
   }
 
   /**
@@ -23,14 +29,29 @@ export default class BaseStore {
   /**
    * Register event listener to dispacher
    */
-  registerDispatcher() {
+  dispatch() {
+    return {};
+  }
+
+  /**
+   * Set state and emit change event
+   */
+  setState(state) {
+    // overwrite current state
+    _.each(state, (v, k) => {
+      this.state[k] = v;
+    });
+    // emit changes
+    this.emit(state);
   }
 
   /**
    * Emit change event
    */
-  emit() {
-    _.each(this.listeners, listener => listener(this.state));
+  emit(state) {
+    // emit full state if not specified
+    state = state || this.state;
+    _.each(this.listeners, listener => listener(state));
   }
 
   /**

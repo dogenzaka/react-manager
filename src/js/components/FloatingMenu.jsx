@@ -16,12 +16,6 @@ export default React.createClass({
     };
   },
 
-  componentDidMount() {
-  },
-
-  componentDidUnmount() {
-  },
-
   render() {
 
     let pos = this.props.position || "bottom";

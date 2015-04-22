@@ -15,7 +15,7 @@ let SchemaNumber = React.createClass({
   componentDidMount() {
   },
 
-  componentDidUnmount() {
+  componentWillUnmount() {
   },
 
   render() {

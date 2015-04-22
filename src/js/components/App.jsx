@@ -1,43 +1,37 @@
 'use strict';
 
 import React from 'react';
-import Router from 'react-router';
-import mui from 'material-ui';
+import { RouteHandler, State } from 'react-router';
+import { AppCanvas } from 'material-ui';
 
-import AppLeftNav from './AppLeftNav.jsx';
-import AppSubBar from './AppSubBar.jsx';
+import Header from './Header.jsx';
+import Snackbar from './Snackbar.jsx';
 
-let { AppCanvas, AppBar } = mui;
-let { RouteHandler } = Router;
 
 let App = React.createClass({
 
-  mixins: [Router.State],
+  mixins: [State],
 
   getInitialState() {
     return {};
   },
 
-  _didTapMenuIcon() {
-    this.refs.leftNav.toggle();
+  componentDidMount() {
+  },
+
+  componentWillUnmount() {
+  },
+
+  _setState(state) {
+    this.setState({ title: state.title });
   },
 
   render() {
-
-    let title = this.state.title || "React Manager";
-
     return (
       <AppCanvas predefinedLayout={1}>
-
-        <AppBar
-          className="mui-dark-theme"
-          zDepth={0}
-          onMenuIconButtonTouchTap={this._didTapMenuIcon} />
-
-        <AppLeftNav ref="leftNav" />
-
+        <Header />
         <RouteHandler />
-
+        <Snackbar />
       </AppCanvas>
     );
   }

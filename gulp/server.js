@@ -3,7 +3,7 @@
 var gulp = require('gulp');
 
 // Launch the server
-gulp.task('server', ['build'], function() {
+gulp.task('server', function() {
 
   gulp.watch('templates/stylus/**/*', ['stylus']);
   gulp.watch('templates/jade/**/*', ['jade']);

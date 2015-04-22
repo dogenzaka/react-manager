@@ -2,19 +2,35 @@
 
 import events from 'events';
 
+let dispatcher = {};
+
 let emitter = new events.EventEmitter();
 [
   'login',
   'logout',
 
   // App
-  'setAppTitle',
+  'setTitle',
+  'setSubTitle',
 
   // Endpoint
   'addEndpoint',
   'updateEndpoint',
   'selectEndpoint',
   'removeEndpoint',
+
+  // Config
+  'setConfig',
+
+  // Authorize
+  'setAuthConfig',
+  'setAuthUser',
+  'setAuthToken',
+  'setAuthFail',
+
+  // Notify error
+  'notifyError',
+  'notifyInfo',
 
 ].map(name => {
 
@@ -32,13 +48,19 @@ let emitter = new events.EventEmitter();
     emitter.removeListener(name, handler);
   };
 
-  exports[name] = dispatch;
+  dispatcher[name] = dispatch;
 
 });
 
-exports.on = (listeners) => {
+dispatcher.on = (listeners) => {
   for (let name in listeners) {
-    exports[name] = listeners[name];
+    if (dispatcher[name]) {
+      dispatcher[name].on(listeners[name]);
+    } else {
+      console.warn(name + ' is not in dispatcher');
+    }
   }
 };
+
+export default dispatcher;
 

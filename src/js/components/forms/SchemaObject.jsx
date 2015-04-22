@@ -30,7 +30,19 @@ let SchemaObject = React.createClass({
   componentDidMount() {
   },
 
-  componentDidUnmount() {
+  componentWillUnmount() {
+  },
+
+  getValue() {
+    let items = this.state.items || [];
+    let value = {};
+    _.each(items, item => {
+      let comp = this.refs[item.key];
+      if (comp) {
+        value[item.key] = comp.getValue();
+      }
+    });
+    return value;
   },
 
   render() {
@@ -51,6 +63,7 @@ let SchemaObject = React.createClass({
       return <SchemaItem
         name={name}
         key={name}
+        ref={name}
         path={itemPath}
         value={value[name]}
         parentValue={value}
@@ -58,6 +71,7 @@ let SchemaObject = React.createClass({
         error={error}
         {...other} />;
     });
+    this.state.items = items;
     return (
       <div className="schema-form__item schema-form__item--object row row-wrap">
         {items}

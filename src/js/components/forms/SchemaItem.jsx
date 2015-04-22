@@ -31,6 +31,10 @@ let SchemaItem = React.createClass({
     this.state.error = props.error;
   },
 
+  getValue() {
+    return this.refs.item.getValue();
+  },
+
   render() {
     return this._makeItem(this.props.prop);
   },
@@ -56,17 +60,17 @@ let SchemaItem = React.createClass({
 
   _makeString() {
     let SchemaText = require('./SchemaText.jsx');
-    return <SchemaText {...this.props} onChange={this._didChange} error={this.state.error} />;
+    return <SchemaText {...this.props} onChange={this._didChange} error={this.state.error} ref="item" />;
   },
 
   _makeNumber() {
     let SchemaNumber = require('./SchemaNumber.jsx');
-    return <SchemaNumber {...this.props} onChange={this._didChange} error={this.state.error} />;
+    return <SchemaNumber {...this.props} onChange={this._didChange} error={this.state.error} ref="item" />;
   },
 
   _makeObject() {
     let SchemaObject = require('./SchemaObject.jsx');
-    return <SchemaObject {...this.props} />;
+    return <SchemaObject {...this.props} ref="item" />;
   },
 
   _makeArray() {

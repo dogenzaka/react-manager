@@ -1,7 +1,12 @@
 
 export default {
 
-  name: "Name",
-  url: "URL",
+  SiteTitle: 'React Manager',
+
+  // Labels
+  name: 'Name',
+  password: 'Password',
+  url: 'URL',
+  username: 'User name',
 
 };

@@ -21,6 +21,7 @@ let SchemaForm = React.createClass({
     value: React.PropTypes.object,
     onSubmit: React.PropTypes.func,
     onCancel: React.PropTypes.func,
+    submitLabel: React.PropTypes.string,
   },
 
   getInitialState() {
@@ -33,6 +34,7 @@ let SchemaForm = React.createClass({
 
   componentWillReceiveProps(props) {
     this._setProps(props);
+    this.state.saving = false;
   },
 
   _setProps(props) {
@@ -45,16 +47,17 @@ let SchemaForm = React.createClass({
     let schema = this.state.schema;
     let value = this.state.value;
     let saving = !!this.state.saving;
+    let submitLabel = this.props.submitLabel || i18n('Save');
     let submitButton = saving ?
       <RaisedButton primary={true} type="submit" onClick={this._didSubmit}>
         <FontIcon className="md-spin-reverse md-loop md-2x .schema-form__icon" />
       </RaisedButton> :
-      <RaisedButton label={i18n('Save')} primary={true} type="submit" onClick={this._didSubmit} />;
+      <RaisedButton label={submitLabel} primary={true} type="submit" onClick={this._didSubmit} />;
 
     return (
       <div className="schema-form">
         <form onSubmit={this._didSubmit} ref="form">
-          <SchemaItem form={this} name="" path="" schema={schema} value={value} errors={this.state.errors} />
+          <SchemaItem form={this} name="" path="" schema={schema} value={value} errors={this.state.errors} ref="item" />
           <div className="schema-form__buttons">
             <div className="schema-form__buttons__button">
               {submitButton}
@@ -88,18 +91,20 @@ let SchemaForm = React.createClass({
     return schema;
   },
 
-  _validate() {
-    return tv4.validateMultiple(this.state.value, this.state.schema);
+  _validate(value) {
+    return tv4.validateMultiple(value, this.state.schema);
   },
 
   _didSubmit(e) {
-    console.info("Submitting schema form", this.props.value);
     e.preventDefault();
+    // Get value from current form
+    let value = this.refs.item.getValue();
+    console.info("Submitting schema form", value);
 
-    let result = this._validate();
+    let result = this._validate(value);
     if (result.valid) {
       if (this.props.onSubmit) {
-        this.props.onSubmit(this.props.value);
+        this.props.onSubmit(value);
         this.setState({ saving: true });
       }
     } else {

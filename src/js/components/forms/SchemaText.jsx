@@ -16,16 +16,25 @@ let SchemaText = React.createClass({
     error: React.PropTypes.object,
   },
 
+  getValue() {
+    return this.refs.text.getValue();
+  },
+
   render() {
 
     let schema = this.props.schema;
     let error = this.props.error;
     let cols = schema.cols || 12;
+    let type = 'text';
+    if (schema.format === 'password') {
+      type = 'password';
+    }
 
     return (
       <div className={"schema-form__item schema-form__item--text cols-"+cols}>
         <TextField
           ref="text"
+          type={type}
           hintText={i18n(schema.hint)}
           errorText={error && error.message}
           defaultValue={this.props.value}

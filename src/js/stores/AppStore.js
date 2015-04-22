@@ -9,16 +9,10 @@ class AppStore extends BaseStore {
 
   constructor() {
     super();
-    this.state = {
-      title: "React Manager"
-    };
   }
 
-  registerDispatcher(dispatcher) {
-    dispatcher.setAppTitle.on((title) => {
-      this.state.title = title;
-      this.emit();
-    });
+  getInitialState() {
+    return {};
   }
 
 }
