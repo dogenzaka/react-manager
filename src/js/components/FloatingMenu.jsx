@@ -8,6 +8,7 @@ export default React.createClass({
   propTypes: {
     position: React.PropTypes.string,
     onClickAdd: React.PropTypes.func,
+    items: React.PropTypes.array,
   },
 
   getInitialState() {
@@ -20,10 +21,12 @@ export default React.createClass({
 
     let pos = this.props.position || "bottom";
     let rotated = this.state.rotated ? " rotated":"";
+    let mini = pos === "top" ? true : false;
+    let iconClass = "md-add";
 
     return (
       <div className={"floating-menu floating-menu--"+pos}>
-        <FloatingActionButton iconClassName={"md-add md-2x"+rotated} onClick={this._didClickAdd} />
+        <FloatingActionButton mini={mini} iconClassName={iconClass + " md-2x"+rotated} onClick={this._didClickAdd} zDepth={1} />
       </div>
     );
   },

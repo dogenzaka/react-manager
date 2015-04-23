@@ -4,6 +4,7 @@ import { Route, DefaultRoute } from 'react-router';
 
 import App from './App.jsx';
 import Index from './Index.jsx';
+import Empty from './Empty.jsx';
 import Endpoints from './Endpoints.jsx';
 
 import Login from './login/Login.jsx';
@@ -11,6 +12,9 @@ import LoginStrategies from './login/Strategies.jsx';
 import LoginForm from './login/LoginForm.jsx';
 import LoginToken from './login/LoginToken.jsx';
 import Logout from './login/Logout.jsx';
+
+import Entity from './entity/Entity.jsx';
+import EntityTable from './entity/EntityTable.jsx';
 
 export default (
   <Route path="/" handler={App}>
@@ -21,7 +25,10 @@ export default (
       <DefaultRoute handler={LoginStrategies} />
     </Route>
     <Route name="logout" path="/logout" handler={Logout} />
-    <Route name="entity" path="/entity/:id" handler={Index} />
+    <Route name="entity" path="/entity" handler={Entity}>
+      <Route name="entityTable" path="/entity/:id" handler={EntityTable} />
+      <DefaultRoute handler={Empty} />
+    </Route>
     <DefaultRoute name="index" handler={Index} />
   </Route>
 );

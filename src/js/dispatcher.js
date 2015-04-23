@@ -11,7 +11,7 @@ let emitter = new events.EventEmitter();
 
   // App
   'setTitle',
-  'setSubTitle',
+  'expandTitle',
 
   // Endpoint
   'addEndpoint',

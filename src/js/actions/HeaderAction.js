@@ -6,7 +6,7 @@ export function setTitle(title) {
   dispatcher.setTitle(title);
 }
 
-export function setSubTitle(title) {
-  dispatcher.setSubTitle(title);
+export function expandTitle(expansion) {
+  dispatcher.expandTitle(expansion);
 }
 

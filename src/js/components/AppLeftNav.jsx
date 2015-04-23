@@ -2,7 +2,6 @@
 
 import _ from 'lodash';
 import React from 'react';
-import Router from 'react-router';
 import i18n from '../i18n';
 import { LeftNav, MenuItem } from 'material-ui';
 import AuthStore from '../stores/AuthStore';
@@ -10,7 +9,9 @@ import ConfigStore from '../stores/ConfigStore';
 
 export default React.createClass({
 
-  mixins: [Router.Navigation, Router.State],
+  contextTypes: {
+    router: React.PropTypes.func
+  },
 
   getInitialState() {
     return {
@@ -79,10 +80,7 @@ export default React.createClass({
     let menuItems = [];
     let config = this.state.config || {};
     if (config.entities) {
-      menuItems.push({ type: MenuItem.Types.SUBHEADER, text: i18n('Entities') });
-      _.each(config.entities, entity => {
-        menuItems.push({ route: 'entity', params: { id: entity.id }, text: i18n(entity.id) });
-      });
+      menuItems.push({ route: 'entity', text: i18n('Entities') });
     }
     menuItems.push({ type: MenuItem.Types.SUBHEADER, text: i18n('Others') });
     menuItems.push({ route: 'endpoints', text: i18n('Endpoint') });

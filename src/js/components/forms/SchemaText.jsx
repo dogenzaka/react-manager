@@ -16,6 +16,18 @@ let SchemaText = React.createClass({
     error: React.PropTypes.object,
   },
 
+  getInitialState() {
+    return {};
+  },
+
+  componentWillMount() {
+    this.state.value = this.props.value;
+  },
+
+  componentWillReceiveProps() {
+    this.state.value = this.props.value;
+  },
+
   getValue() {
     return this.refs.text.getValue();
   },
@@ -37,9 +49,8 @@ let SchemaText = React.createClass({
           type={type}
           hintText={i18n(schema.hint)}
           errorText={error && error.message}
-          defaultValue={this.props.value}
+          defaultValue={this.state.value}
           floatingLabelText={i18n(this.props.name)}
-          onChange={this._didChange}
         />
       </div>
     );

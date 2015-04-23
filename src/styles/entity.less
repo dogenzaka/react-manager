@@ -1,0 +1,46 @@
+
+.entity {
+
+  padding-top: 64px;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+
+  &__menu {
+    width: 160px;
+    overflow: scroll;
+
+    .mui-menu-item {
+      padding: 0 12px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: auto;
+    }
+  }
+
+  &__table {
+    overflow: scroll;
+
+    thead {
+      position: fixed;
+      display: flex;
+      width: 100%;
+      font-weight: bold;
+      line-height: 40px;
+      color: @body-second-color;
+      border-bottom: 1px solid @border-color;
+    }
+    tbody:before {
+      content: '';
+      display: block;
+      height: 40px;
+
+      tr {
+      }
+
+      td {
+        height: 36px;
+      }
+    }
+  }
+}

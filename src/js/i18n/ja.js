@@ -7,7 +7,8 @@ export default {
   Edit: '編集',
   Endpoint: 'エンドポイント',
   Endpoints: 'エンドポイント一覧',
-  Entities: 'エンティティ一覧',
+  Entity: 'データ',
+  Entities: 'データ管理',
   Login: 'ログイン',
   Logout: 'ログアウト',
   Name: '名前',
@@ -16,6 +17,8 @@ export default {
   Unauthorized: '認証していません',
 
   // Labels
+  endpoints: 'エンドポイント一覧',
+  entity: 'データ',
   name: '名前',
   password: 'パスワード',
   url: 'URL',

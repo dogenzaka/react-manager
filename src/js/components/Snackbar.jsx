@@ -1,12 +1,10 @@
 'use strict';
 
 import React from 'react';
-import mui from 'material-ui';
-
 import SnackbarStore from '../stores/SnackbarStore';
 import i18n from '../i18n';
 
-let { Snackbar } = mui;
+import { Snackbar } from 'material-ui';
 
 let AppSnackbar = React.createClass({
 

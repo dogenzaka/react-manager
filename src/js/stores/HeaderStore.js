@@ -12,15 +12,15 @@ class HeaderStore extends BaseStore {
   }
 
   getInitialState() {
-    return { title: '', subTitle: '' };
+    return { title: '' };
   }
 
   setTitle(title) {
-    this.setState({ title: title, subTitle: '' });
+    this.setState({ title: title });
   }
 
-  setSubTitle(title) {
-    this.setState({ title: '', subTitle: title });
+  expandTitle(expansion) {
+    this.setState({ expanded: expansion });
   }
 
 }

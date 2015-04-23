@@ -22,7 +22,7 @@ export default React.createClass({
     };
   },
 
-  componentDidMount() {
+  componentWillMount() {
     HeaderStore.addListener(this._setState);
   },
 
@@ -31,6 +31,7 @@ export default React.createClass({
   },
 
   _setState(state) {
+    console.log(state);
     this.setState(state);
   },
 
@@ -39,28 +40,21 @@ export default React.createClass({
   },
 
   render() {
-    let barDepth = 0;
-    let title;
-    let subBar;
-    if (this.state.subTitle) {
-      subBar =
-        <div className="sub-bar mui-dark-theme mui-paper mui-z-depth-1">
-          <div className={"sub-bar__title"}>{this.state.subTitle}</div>
-        </div>;
-      title = "";
-    } else {
-      barDepth = 1;
-      title = this.state.title;
+
+    let className = 'mui-dark-theme';
+    if (this.state.expanded) {
+      className += ' expanded';
     }
+    console.log(className);
+
     return (
       <header>
         <AppLeftNav ref="leftNav" />
         <AppBar
-          className="mui-dark-theme"
-          title={i18n(title)}
-          zDepth={barDepth}
+          className={className}
+          title={this.state.title}
+          zDepth={1}
           onMenuIconButtonTouchTap={this._didTapMenuIcon} />
-        {subBar}
       </header>
     );
 

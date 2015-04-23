@@ -1,11 +1,10 @@
 'use strict';
 
 import React from 'react';
-import Router from 'react-router';
 import mui from 'material-ui';
 import _ from 'lodash';
 
-import { setSubTitle } from '../actions/HeaderAction';
+import { expandTitle } from '../actions/HeaderAction';
 import { selectEndpoint, addEndpoint, updateEndpoint, removeEndpoint } from '../actions/EndpointAction';
 
 import FloatingMenu from './FloatingMenu.jsx';
@@ -18,7 +17,9 @@ let { Dialog, FontIcon } = mui;
 
 export default React.createClass({
 
-  mixins: [Router.Navigation],
+  contextTypes: {
+    router: React.PropTypes.func
+  },
 
   getInitialState() {
     return {
@@ -28,15 +29,16 @@ export default React.createClass({
 
   componentWillMount() {
     this.dialogCount = 0;
+    expandTitle(true);
   },
 
   componentDidMount() {
     EndpointStore.addListener(this._setState);
-    setSubTitle(i18n('Endpoints'));
   },
 
   componentWillUnmount() {
     EndpointStore.removeListener(this._setState);
+    expandTitle(false);
   },
 
   getDialogKey() {
