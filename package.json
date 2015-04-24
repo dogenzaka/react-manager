@@ -6,6 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "animate.css": "^3.2.5",
+    "halogen": "^0.1.8",
     "lodash": "^3.6.0",
     "material-design-fonticons": "^1.0.0",
     "material-ui": "^0.7.0",

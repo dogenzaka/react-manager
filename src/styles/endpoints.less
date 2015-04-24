@@ -1,14 +1,16 @@
 
 .endpoints {
-  padding-top: 110px;
+  padding-top: 88px;
 
   &__header {
     position: fixed;
     display: flex;
     width: 100%;
-    margin-left: 80px;
+    padding-left: 80px;
     line-height: 48px;
     color: @body-second-color;
+    z-index: 2;
+    background: #fff;
     font-weight: bold;
     border-bottom: 1px solid @border-color;
 
@@ -22,6 +24,7 @@
 
   &__items {
     padding-top: 48px;
+    overflow: scroll;
 
     &__item {
       display: flex;

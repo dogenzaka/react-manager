@@ -2,7 +2,6 @@
 
 import React from 'react';
 import mui from 'material-ui';
-import i18n from '../i18n';
 import HeaderStore from '../stores/HeaderStore';
 import AppLeftNav from './AppLeftNav.jsx';
 
@@ -31,7 +30,6 @@ export default React.createClass({
   },
 
   _setState(state) {
-    console.log(state);
     this.setState(state);
   },
 
@@ -45,7 +43,6 @@ export default React.createClass({
     if (this.state.expanded) {
       className += ' expanded';
     }
-    console.log(className);
 
     return (
       <header>

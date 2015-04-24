@@ -86,8 +86,6 @@ app.get('/auth', function(req, res) {
   });
 });
 
-var specs = {
-};
 
 var requireAuth = function(req, res, next) {
   var token = req.get('x-rm-token');
@@ -114,111 +112,107 @@ app.use(function(req, res, next) {
   next();
 });
 
+var specs = {
+  user: {
+    id: 'user',
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string', maxLength: 100, minLength: 1 },
+        firstName: { type: 'string', maxLength: 100, minLength: 1 },
+        lastName: { type: 'string', maxLength: 100, minLength: 1 },
+        gender: { type: 'string', enum: ['male','female']},
+        email: { type: 'string', style: 'long' },
+        phone: 'string',
+        createdAt: { type: 'string', format: 'date' },
+      },
+      primaryKey: ['userId'],
+      required: ['userId','firstName','lastName']
+    },
+    features: {
+      list: {
+        fields: [
+          'userId',
+          'firstName',
+          'lastName',
+          { id: 'email', style: { flex: 6 }},
+          'phone',
+          { id: 'createdAt', format: 'short-date' },
+        ]
+      },
+      download: true,
+      upload: true
+    }
+  },
+  company: {
+    id: 'company',
+    schema: {
+      type: 'object',
+      properties: {
+        companyId: { type: 'string', maxLength: 100, minLength: 1 },
+        name: { type: 'string', maxLength: 100, minLength: 1 },
+        phrase: 'string',
+        country: 'string',
+        address: {
+          type: 'object',
+          properties: {
+            zipCode: 'string',
+            city: 'string',
+            streetAddress: 'string'
+          }
+        }
+      },
+      primaryKey: ['companyId'],
+      required: ['companyId', 'name']
+    },
+
+    features: {
+      list: {
+        fields: [
+          'companyId',
+          'name',
+          {
+            id:'country',
+            filter: {
+              items: ['Japan','Nepal','India']
+            }
+          },
+          'address.city',
+          {
+            id: 'video',
+            preview: {
+              type: 'video',
+              url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.m3u8'
+            }
+          }
+        ]
+      },
+      previews: [
+      ],
+      search: {
+        schema: {
+          type: 'object',
+          properties: {
+            companyId: { type: 'string' },
+            country: {
+              type: 'string',
+              enum: ['Japan','Nepal','India']
+            },
+            zipCode: 'number',
+            city: 'string',
+            streetAddress: 'string'
+          }
+        }
+      }
+    }
+  },
+};
+
 app.get('/config', requireAuth, function(req, res) {
 
   res.json({
 
-    entities: [{
-      id: 'user',
-      schema: {
-        type: 'object',
-        properties: {
-          userId: { type: 'string', maxLength: 100, minLength: 1 },
-          firstName: { type: 'string', maxLength: 100, minLength: 1 },
-          lastName: { type: 'string', maxLength: 100, minLength: 1 },
-          gender: { type: 'string', enum: ['male','female']},
-          email: { type: 'string', style: 'long' },
-          phone: 'string',
-          createdAt: { type: 'string', format: 'date' },
-        },
-        primaryKey: ['userId'],
-        required: ['userId','firstName','lastName']
-      },
-      features: {
-        list: {
-          fields: [
-            { id: 'userId', style: { width: '120px' }},
-            'firstName',
-            'lastName',
-            'email',
-            'phone',
-            { id: 'createdAt', format: 'short-date' },
-            {
-              id: 'userIcon',
-              preview: {
-                type: 'image',
-                url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.png'
-              }
-            },
-            { id: 'createdAt', type: 'date', format: 'short' }
-          ]
-        },
-        download: true,
-        upload: true
-      }
-    }, {
-      id: 'company',
-      schema: {
-        type: 'object',
-        properties: {
-          companyId: { type: 'string', maxLength: 100, minLength: 1 },
-          name: { type: 'string', maxLength: 100, minLength: 1 },
-          phrase: 'string',
-          country: 'string',
-          address: {
-            type: 'object',
-            properties: {
-              zipCode: 'string',
-              city: 'string',
-              streetAddress: 'string'
-            }
-          }
-        },
-        primaryKey: ['companyId'],
-        required: ['companyId', 'name']
-      },
-
-      features: {
-        list: {
-          fields: [
-            'companyId',
-            'name',
-            {
-              id:'country',
-              filter: {
-                items: ['Japan','Nepal','India']
-              }
-            },
-            'address.city',
-            {
-              id: 'video',
-              preview: {
-                type: 'video',
-                url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.m3u8'
-              }
-            }
-          ]
-        },
-        previews: [
-        ],
-        search: {
-          schema: {
-            type: 'object',
-            properties: {
-              companyId: { type: 'string' },
-              country: {
-                type: 'string',
-                enum: ['Japan','Nepal','India']
-              },
-              zipCode: 'number',
-              city: 'string',
-              streetAddress: 'string'
-            }
-          }
-        }
-      }
-    }],
-
+    entities: _.values(specs),
     i18n: {
       en: {
         company: 'Company',

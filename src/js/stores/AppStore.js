@@ -9,10 +9,19 @@ class AppStore extends BaseStore {
 
   constructor() {
     super();
+    window.onresize = this._resize;
   }
 
   getInitialState() {
-    return {};
+    return {
+      size: { width: window.innerWidth, height: window.innerHeight }
+    };
+  }
+
+  _resize() {
+    this.setState({
+      size: { width: window.innerWidth, height: window.innerHeight }
+    });
   }
 
 }

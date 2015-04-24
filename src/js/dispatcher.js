@@ -19,6 +19,9 @@ let emitter = new events.EventEmitter();
   'selectEndpoint',
   'removeEndpoint',
 
+  // Entity
+  'setEntityItems',
+
   // Config
   'setConfig',
 

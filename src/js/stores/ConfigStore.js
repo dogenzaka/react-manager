@@ -27,7 +27,21 @@ class ConfigStore extends BaseStore {
         i18n.merge(resources, lang);
       });
     }
+    this._normalize(config);
     this.setState({ config: config });
+  }
+
+  _normalize(config) {
+    _.each(config.entities, entity => {
+      let features = entity.features = entity.features || {};
+      let list = features.list = features.list || {};
+      // Default is first 5 properties
+      list.fields = list.fields || _.map(entity.schema.properties, (v,k) => k).slice(0,5);
+
+      list.fields = list.fields.map(
+        field =>
+        (typeof field === 'string') ? { id: field } : field);
+    });
   }
 
   logout() {

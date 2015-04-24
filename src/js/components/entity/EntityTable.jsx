@@ -9,6 +9,7 @@ import i18n from '../../i18n';
 import EntityTableHeader from './EntityTableHeader.jsx';
 import EntityTableBody from './EntityTableBody.jsx';
 
+import AppStore from '../../stores/AppStore';
 import ConfigStore from '../../stores/ConfigStore';
 
 let EntityTable = React.createClass({
@@ -22,18 +23,38 @@ let EntityTable = React.createClass({
   },
 
   componentWillMount() {
-    let id = this.context.router.getCurrentParams().id;
-    this.state.id = id;
-    this.state.spec = _.find(ConfigStore.state.config.entities, entity => entity.id === id);
+    this._setup();
   },
 
   componentDidMount() {
+    AppStore.addListener(this._setAppState);
+    this._resize();
   },
 
   componentWillUnmount() {
+    AppStore.removeListener(this._setAppState);
   },
 
   componentWillUpdate() {
+    this._setup();
+  },
+
+  _setAppState(state) {
+    if (state.size) {
+      this._resize();
+    }
+  },
+
+  _resize() {
+    let header = this.refs.header.getDOMNode();
+    let body = this.refs.body.getDOMNode();
+    header.style.width = body.clientWidth + 'px';
+  },
+
+  _setup() {
+    let id = this.context.router.getCurrentParams().id;
+    this.state.id = id;
+    this.state.spec = _.find(ConfigStore.state.config.entities, entity => entity.id === id);
   },
 
   render() {
@@ -41,8 +62,8 @@ let EntityTable = React.createClass({
     return (
       <div className="entity__table">
         <table>
-          <EntityTableHeader spec={this.state.spec} />
-          <EntityTableBody spec={this.state.spec} />
+          <EntityTableHeader spec={this.state.spec} ref="header" />
+          <EntityTableBody spec={this.state.spec} ref="body" />
         </table>
         <FloatingMenu position="bottom" onClickAdd={this._didClickAdd} ref="floatingMenu" />
       </div>

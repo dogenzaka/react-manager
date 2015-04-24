@@ -19,6 +19,7 @@ export default {
   // Labels
   endpoints: 'エンドポイント一覧',
   entity: 'データ',
+  login: 'ログイン',
   name: '名前',
   password: 'パスワード',
   url: 'URL',
