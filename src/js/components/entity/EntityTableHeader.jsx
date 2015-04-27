@@ -18,16 +18,17 @@ let EntityTableHeader = React.createClass({
 
     let spec = this.props.spec;
     let columns = spec.features.list.fields.map(field => {
-      return <th key={field.id} style={field.style}>{i18n(field.id)}</th>;
+      return <div
+        className="entity__table__header__column"
+        key={field.id}
+        style={field.style}>{i18n(field.id)}</div>;
     });
 
     return (
-      <thead>
-        <tr>
-          {columns}
-          <th key="control" className='entity__control'></th>
-        </tr>
-      </thead>
+      <div className='entity__table__header'>
+        {columns}
+        <div key="control" className='entity__table__header__column entity__table__header__column--control'></div>
+      </div>
     );
   },
 

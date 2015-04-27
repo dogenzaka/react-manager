@@ -3,7 +3,6 @@
 
   padding-top: 64px;
   display: flex;
-  align-items: stretch;
   height: 100%;
 
   &__menu {
@@ -20,86 +19,82 @@
 
   &__table {
 
-    width: 100%;
     height: 100%;
-    overflow: scroll;
+    width: 100%;
 
-    table {
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    table * {
-      box-sizing: inherit;
-    }
-
-    thead {
+    &__header {
       display: flex;
       position: fixed;
-      flex-direction: column;
+      flex-direction: row;
       align-items: stretch;
       font-weight: bold;
       line-height: 40px;
       color: @body-second-color;
       border-bottom: 1px solid @border-color;
+      background: #fff;
+      z-index: 2;
+      width: calc(~"100% - 132px");
 
-      tr {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: stretch;
-        background: #fff;
-      }
-
-      th {
-        display: block;
+      &__column {
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
         flex: 4;
         padding: 0 2px 0 8px;
         font-weight: bold;
-      }
 
-      th.entity__control {
-        max-width: 50px;
-        min-width: 50px;
+        &--control {
+          max-width: 50px;
+          min-width: 50px;
+        }
       }
     }
 
-    tbody {
+    &__body {
 
-      display: flex;
-      flex-direction: column;
+      height: calc(~"100% - 40px");
       overflow: scroll;
+      margin-top: 40px;
 
-      tr {
+      &__row {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         align-items: stretch;
-      }
 
-      td {
-        height: 48px;
-        line-height: 48px;
-        display: block;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        flex: 4;
-        padding: 0 2px 0 8px;
-      }
+        &:hover {
+          background-color: lighten(@accent-3-color, 20%);
+        }
 
-      td.entity__control {
-        max-width: 50px;
-        min-width: 50px;
-
-        .mui-drop-down-menu {
+        &__column {
           height: 48px;
-          padding: 8px 0 0 4px;
+          line-height: 48px;
+          display: block;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          flex: 4;
+          padding: 0 2px 0 8px;
+
+          input {
+            width: 100%;
+            border: none;
+            padding: 3px 0;
+            background: transparent;
+            color: @primary-1-color;
+            border-bottom: 1px solid @accent-1-color;
+
+            &:focus {
+              outline: 0;
+            }
+          }
+
+        }
+
+        .row-menu {
+          max-width: 50px;
+          min-width: 50px;
+          height: 48px;
         }
       }
     }

@@ -61,10 +61,8 @@ let EntityTable = React.createClass({
 
     return (
       <div className="entity__table">
-        <table>
-          <EntityTableHeader spec={this.state.spec} ref="header" />
-          <EntityTableBody spec={this.state.spec} ref="body" />
-        </table>
+        <EntityTableHeader spec={this.state.spec} ref="header" />
+        <EntityTableBody spec={this.state.spec} ref="body" />
         <FloatingMenu position="bottom" onClickAdd={this._didClickAdd} ref="floatingMenu" />
       </div>
     );

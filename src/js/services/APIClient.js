@@ -86,6 +86,22 @@ class APIClient {
     .end(this._reply(callback, path, body));
   }
 
+  /**
+   * Send put query to the server
+   */
+  put(path, body, callback) {
+    if (typeof body === 'function') {
+      callback = body;
+      body = {};
+    }
+    console.info("API PUT", path, body);
+    request
+    .put(this._path(path))
+    .set('x-rm-token', AuthStore.getToken())
+    .send(body)
+    .end(this._reply(callback, path, body));
+  }
+
 }
 
 export default new APIClient();

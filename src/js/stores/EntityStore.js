@@ -1,7 +1,6 @@
 'use strict';
 
 import BaseStore from './BaseStore';
-import _ from 'lodash';
 
 /**
  * EntityStore
@@ -18,6 +17,17 @@ class EntityStore extends BaseStore {
 
   setEntityItems(result) {
     this.setState(result);
+  }
+
+  updateEntityField(spec, field, item, value) {
+    // Update item value
+    item[field.id] = value;
+    this.setState({
+      spec: spec,
+      field: field,
+      item: item,
+      value: value
+    });
   }
 
 }

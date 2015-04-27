@@ -21,6 +21,7 @@ let emitter = new events.EventEmitter();
 
   // Entity
   'setEntityItems',
+  'updateEntityField',
 
   // Config
   'setConfig',

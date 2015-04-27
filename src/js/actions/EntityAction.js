@@ -2,6 +2,7 @@
 
 let dispatcher = require('../dispatcher');
 
+import _ from 'lodash';
 import APIClient from '../services/APIClient';
 
 export function getEntityItems(id, opts) {
@@ -26,3 +27,28 @@ export function getEntityItems(id, opts) {
   });
 
 }
+
+export function updateEntityField(params) {
+
+  let spec = params.spec;
+  let item = params.item;
+  let field = params.field;
+  let value = params.value;
+
+  let primaryKeys = spec.schema.primaryKey || ['id'];
+  let primaryKey = _.map(primaryKeys, key => item[key]).join(',');
+
+  APIClient.put(
+    '/entity/'+spec.id+'/'+primaryKey+'/'+field.id,
+    { value: value },
+    (err) => {
+      if (err) {
+        dispatcher.notifyError(err);
+      } else {
+        dispatcher.updateEntityField(spec, field, item, value);
+      }
+    }
+  );
+
+}
+

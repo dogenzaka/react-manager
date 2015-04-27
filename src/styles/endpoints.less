@@ -1,6 +1,8 @@
 
 .endpoints {
+
   padding-top: 88px;
+  height: 100%;
 
   &__header {
     position: fixed;
@@ -23,7 +25,9 @@
   }
 
   &__items {
-    padding-top: 48px;
+
+    margin-top: 48px;
+    height: calc(~"100% - 48px");
     overflow: scroll;
 
     &__item {
