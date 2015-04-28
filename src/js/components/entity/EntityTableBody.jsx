@@ -7,9 +7,14 @@ import { Dialog } from 'material-ui';
 import i18n from '../../i18n';
 import EntityTableRow from './EntityTableRow.jsx';
 import EntityStore from '../../stores/EntityStore';
-import { getEntityItems, updateEntityField, removeEntity } from '../../actions/EntityAction';
+import EntityForm from './EntityForm.jsx';
+import { getEntityItems, updateEntityField, updateEntity, removeEntity } from '../../actions/EntityAction';
 
 let EntityTableBody = React.createClass({
+
+  contentType: {
+    router: React.PropTypes.func,
+  },
 
   propTypes: {
     spec: React.PropTypes.object,
@@ -62,11 +67,16 @@ let EntityTableBody = React.createClass({
         }
         if (component.state.item === state.item) {
           let field = component.field(state.field.id);
-          field.props.value = state.value;
-          field.setState({ editing: false });
+          field.setState({ editing: false, value: state.value });
         }
       });
     } else if (state.type === 'update') {
+      // Update entity
+      this.refs.editForm.refs.form.setState({ done: true });
+      this.refs.editForm.dismiss();
+    } else if (state.type === 'updateFail') {
+      // Update fail
+      this.refs.editForm.refs.form.setState({ saving: false });
     } else if (state.type === 'remove') {
       let list = this.state.list;
       list = _.filter(list, (item) => item !== state.item);
@@ -100,8 +110,8 @@ let EntityTableBody = React.createClass({
         spec={spec}
         item={item}
         fields={fields}
-        onChange={this._didChange}
         onChangeField={this._didChangeField}
+        onEdit={this._didEdit}
         onRemove={this._didRemoveConfirm}
       />;
     });
@@ -133,6 +143,11 @@ let EntityTableBody = React.createClass({
           dismissOnClickAway={true}>
           {i18n('Are you sure to delete the entity?')}
         </Dialog>
+        <EntityForm
+          ref="editForm"
+          spec={this.props.spec}
+          onSubmit={this._didSubmit}
+        />
       </div>
     );
 
@@ -144,18 +159,19 @@ let EntityTableBody = React.createClass({
     getEntityItems(spec.id, { offset: offset });
   },
 
-  _didChange() {
+  _didEdit(row, item) {
+    let editForm = this.refs.editForm;
+    editForm.show(this.props.spec, item);
+  },
+
+  _didSubmit(item) {
+    updateEntity(this.props.spec, item);
   },
 
   _didChangeField(row, field, value) {
     let spec = this.props.spec;
     let item = row.state.item;
-    updateEntityField({
-      spec: spec,
-      item: item,
-      field: field,
-      value: value
-    });
+    updateEntityField(spec, item, field, value);
   },
 
   _didRemoveConfirm(row, item) {

@@ -20,17 +20,11 @@ let SchemaObject = React.createClass({
   },
 
   getInitialState() {
-    return { value: {} };
+    return { value: this.props.value || {} };
   },
 
-  componentWillMount() {
-    this.state.value = this.props.value || {};
-  },
-
-  componentDidMount() {
-  },
-
-  componentWillUnmount() {
+  componentWillReceiveProps(props) {
+    this.state.value = props.value;
   },
 
   getValue() {

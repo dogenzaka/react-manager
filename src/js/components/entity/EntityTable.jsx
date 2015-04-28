@@ -1,6 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
 import React from 'react';
 
 import FloatingMenu from '../FloatingMenu.jsx';
@@ -54,7 +53,7 @@ let EntityTable = React.createClass({
   _setup() {
     let id = this.context.router.getCurrentParams().id;
     this.state.id = id;
-    this.state.spec = _.find(ConfigStore.state.config.entities, entity => entity.id === id);
+    this.state.spec = ConfigStore.getEntitySpec(id);
   },
 
   render() {

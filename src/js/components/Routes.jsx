@@ -15,6 +15,7 @@ import Logout from './login/Logout.jsx';
 
 import Entity from './entity/Entity.jsx';
 import EntityTable from './entity/EntityTable.jsx';
+import EntityForm from './entity/EntityForm.jsx';
 
 export default (
   <Route path="/" handler={App}>

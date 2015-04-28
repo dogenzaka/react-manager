@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 import React from 'react';
-import i18n from '../../i18n';
 
+import i18n from '../../i18n';
 import RowMenu from '../RowMenu.jsx';
 import EntityTableColumn from './EntityTableColumn.jsx';
 
@@ -45,8 +45,8 @@ let EntityTableRow = React.createClass({
 
     let columns = fields.map(field => {
 
-      let value = item[field.id];
-      let isPrimary = (spec.schema.primaryKey || ['id']).indexOf(field.id) >= 0;
+      let value = _.get(item, field.id);
+      let isPrimary = spec.isPrimary(field.id);
       let isEditable = !isPrimary;
 
       return <EntityTableColumn
@@ -75,6 +75,7 @@ let EntityTableRow = React.createClass({
   _didClickRowMenu(e, i) {
     if (i === 0) {
       // Edit
+      this.props.onEdit(this, this.state.item);
     } else  if (i === 1) {
       // Remove
       if (this.props.onRemove) {

@@ -17,19 +17,15 @@ let SchemaText = React.createClass({
   },
 
   getInitialState() {
-    return {};
+    return { value: this.props.value };
   },
 
-  componentWillMount() {
-    this.state.value = this.props.value;
-  },
-
-  componentWillReceiveProps() {
-    this.state.value = this.props.value;
+  componentWillReceiveProps(props) {
+    this.state.value = props.value;
   },
 
   getValue() {
-    return this.refs.text.getValue();
+    return this.state.value;
   },
 
   render() {
@@ -49,7 +45,8 @@ let SchemaText = React.createClass({
           type={type}
           hintText={i18n(schema.hint)}
           errorText={error && error.message}
-          defaultValue={this.state.value}
+          value={this.state.value}
+          onChange={this._didChange}
           floatingLabelText={i18n(this.props.name)}
         />
       </div>
@@ -57,8 +54,10 @@ let SchemaText = React.createClass({
   },
 
   _didChange(e) {
+    let value = e.target.value;
+    this.setState({ value: value });
     if (this.props.onChange) {
-      this.props.onChange(e.target.value);
+      this.props.onChange(value);
     }
   },
 

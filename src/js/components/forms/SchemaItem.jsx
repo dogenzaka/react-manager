@@ -36,7 +36,7 @@ let SchemaItem = React.createClass({
   },
 
   render() {
-    return this._makeItem(this.props.prop);
+    return this._makeItem();
   },
 
   /**
@@ -59,8 +59,13 @@ let SchemaItem = React.createClass({
   },
 
   _makeString() {
-    let SchemaText = require('./SchemaText.jsx');
-    return <SchemaText {...this.props} onChange={this._didChange} error={this.state.error} ref="item" />;
+    if (this.props.schema.enum) {
+      let SchemaChoice = require('./SchemaChoice.jsx');
+      return <SchemaChoice {...this.props} onChange={this._didChange} error={this.state.error} ref="item" />;
+    } else {
+      let SchemaText = require('./SchemaText.jsx');
+      return <SchemaText {...this.props} onChange={this._didChange} error={this.state.error} ref="item" />;
+    }
   },
 
   _makeNumber() {
@@ -77,19 +82,12 @@ let SchemaItem = React.createClass({
     return <div>NOT YET IMPLEMENTED</div>;
   },
 
-  _validate() {
-    if (tv4.validate(this.state.value, this.props.schema)) {
+  _didChange(value) {
+    if (tv4.validate(value, this.props.schema)) {
       this.setState({ error: null });
     } else {
       this.setState({ error: tv4.error });
     }
-  },
-
-  _didChange(value) {
-    let { name, parentValue } = this.props;
-    parentValue[name] = value;
-    this.state.value = value;
-    this._validate();
   },
 
 });

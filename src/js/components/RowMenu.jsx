@@ -19,6 +19,8 @@ export default React.createClass({
 
   mixins: [Classable, ClickAwayable],
 
+  manuallyBindClickAway: true,
+
   propTypes: {
     items: React.PropTypes.array,
     onClickItem: React.PropTypes.func,
@@ -38,6 +40,14 @@ export default React.createClass({
 
   componentClickAway() {
     this.setState({ open: false });
+  },
+
+  componentDidUpdate() {
+    if (this.state.open) {
+      this._bindClickAway();
+    } else {
+      this._unbindClickAway();
+    }
   },
 
   render() {

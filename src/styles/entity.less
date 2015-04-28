@@ -98,5 +98,35 @@
         }
       }
     }
+
+    &__form {
+      position: fixed;
+      top: 64px;
+      background: #fff;
+      z-index: 3;
+      max-width: 600px;
+      right: -610px;
+      height: calc(~"100% - 64px");
+
+      transition-property: right;
+      transition-duration: 0.2s;
+      transition-timing-function: ease-out;
+
+      &__container {
+        height: calc(~"100% - 52px");
+        overflow: scroll;
+      }
+
+      .schema-form {
+        height: 100%;
+      }
+
+      .schema-form__buttons {
+        position: fixed;
+        bottom: 8px;
+        right: 4px;
+        z-index: 5;
+      }
+    }
   }
 }

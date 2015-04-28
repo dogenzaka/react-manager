@@ -47,12 +47,16 @@ let SchemaForm = React.createClass({
     let schema = this.state.schema;
     let value = this.state.value;
     let saving = !!this.state.saving;
+    let done = !!this.state.done;
     let submitLabel = this.props.submitLabel || i18n('Save');
     let submitButton = saving ?
       <RaisedButton primary={true} type="submit" onClick={this._didSubmit}>
         <FontIcon className="md-spin-reverse md-loop md-2x .schema-form__icon" />
       </RaisedButton> :
       <RaisedButton label={submitLabel} primary={true} type="submit" onClick={this._didSubmit} />;
+    if (done) {
+      submitButton = <RaisedButton label={i18n('Done')} type="button" />;
+    }
 
     return (
       <div className="schema-form">
@@ -105,11 +109,11 @@ let SchemaForm = React.createClass({
     if (result.valid) {
       if (this.props.onSubmit) {
         this.props.onSubmit(value);
-        this.setState({ saving: true });
+        this.setState({ saving: true, value: value });
       }
     } else {
       console.error("SchemaForm validation failed", result);
-      this.setState({ errors: result.errors });
+      this.setState({ errors: result.errors, value: value });
     }
   },
 

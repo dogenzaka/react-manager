@@ -34,8 +34,8 @@ export default {
   'site.title': 'React Manager',
 
   tv4: {
-    INVALID_TYPE: "正しい{type}の形式で入力してください",
-    ENUM_MISMATCH: "{value}に含まれる値ではありません",
+    INVALID_TYPE: "正しい形式で入力してください",
+    ENUM_MISMATCH: "{enum}に含まれる値ではありません",
     ANY_OF_MISSING: "anyOfスキーマの全て該当しません",
     ONE_OF_MISSING: "oneOfスキーマのいずれにも該当しません",
     ONE_OF_MULTIPLE: "oneOfスキーマの複数に項目に該当します。{index1}, {index2}",

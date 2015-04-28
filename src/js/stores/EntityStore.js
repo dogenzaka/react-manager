@@ -39,6 +39,10 @@ class EntityStore extends BaseStore {
     this.setState({ type: 'update', spec: spec, item: item });
   }
 
+  updateEntityFail(spec, error) {
+    this.setState({ type: 'updateFail', spec: spec, error: error });
+  }
+
   removeEntity(spec, item) {
     this.setState({ type: 'remove', spec: spec, item: item });
   }

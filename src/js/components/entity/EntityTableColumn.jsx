@@ -13,18 +13,19 @@ let EntityTableColumn = React.createClass({
   },
 
   getInitialState() {
-    return { editing: false };
+    return { editing: false, value: this.props.value };
   },
 
   componentDidMount() {
   },
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(props) {
+    this.state.value = props.value;
   },
 
   render() {
 
-    let value = this.props.value;
+    let value = this.state.value;
 
     if (this.state.editing) {
       value = <input
@@ -35,7 +36,9 @@ let EntityTableColumn = React.createClass({
         onKeyUp={this._didKeyUp}
         />;
       setTimeout(() => {
-        this.refs.input.getDOMNode().focus();
+        if (this.refs.input) {
+          this.refs.input.getDOMNode().focus();
+        }
       }, 1);
     }
 
@@ -51,7 +54,7 @@ let EntityTableColumn = React.createClass({
 
   _didClick() {
     if (this.props.editable) {
-      this.setState({ editing: true, original: this.props.value });
+      this.setState({ editing: true, original: this.state.value });
     }
   },
 
@@ -62,13 +65,12 @@ let EntityTableColumn = React.createClass({
   _didKeyUp(e) {
     if (e.keyCode === 27) {
       // ESC
-      this.props.value = this.state.original;
-      this.setState({ editing: false });
+      this.setState({ editing: false, value: this.state.original });
     } else if (e.keyCode === 13) {
       // Enter
       let value = e.target.value;
       if (value === this.state.original) {
-        this.setState({ editing: false });
+        this.setState({ editing: false, value: value });
       } else {
         this.props.onChange(this, this.props.field, value);
       }

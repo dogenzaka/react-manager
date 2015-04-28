@@ -53,12 +53,15 @@ export function updateEntityField(spec, item, field, value) {
 
 export function updateEntity(spec, item) {
 
+  let primaryKey = spec.getPrimaryKey(item);
+
   APIClient.put(
     '/entity/'+spec.id+'/'+primaryKey,
-    { value: item },
+    item,
     (err) => {
       if (err) {
         dispatcher.notifyError(err);
+        dispatcher.updateEntityFail(spec, item);
       } else {
         dispatcher.updateEntity(spec, item);
       }
@@ -81,8 +84,5 @@ export function removeEntity(spec, item) {
       }
     }
   );
-
-
-
 }
 

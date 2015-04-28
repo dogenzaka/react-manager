@@ -253,6 +253,9 @@ app.get('/config', requireAuth, function(req, res) {
         userId: 'ユーザーID',
         firstName: '名',
         lastName: '姓',
+        gender: '性別',
+        male: '男性',
+        female: '女性',
         email: 'メールアドレス',
         phone: '電話番号',
         createdAt: '作成日',
@@ -418,7 +421,7 @@ app.put('/entity/:kind/:keys/:field', requireAuth, function(req, res) {
   var field = req.params.field;
   var item = find(kind, keys);
   if (item) {
-    item[field] = req.body.value;
+    _.set(item, field, req.body.value);
     res.status(200).end();
   } else {
     res.status(404).end();

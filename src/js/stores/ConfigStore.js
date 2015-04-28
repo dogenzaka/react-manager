@@ -4,6 +4,8 @@ import BaseStore from './BaseStore';
 import i18n from '../i18n';
 import _ from 'lodash';
 
+import EntitySpec from '../services/EntitySpec';
+
 class ConfigStore extends BaseStore {
 
   constructor() {
@@ -29,6 +31,13 @@ class ConfigStore extends BaseStore {
     }
     this._normalize(config);
     this.setState({ config: config });
+  }
+
+  getEntitySpec(id) {
+    let entityConfig = _.find(this.state.config.entities, entity => entity.id === id);
+    if (entityConfig) {
+      return new EntitySpec(entityConfig);
+    }
   }
 
   _normalize(config) {
