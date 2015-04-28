@@ -28,15 +28,14 @@ export function getEntityItems(id, opts) {
 
 }
 
-export function updateEntityField(params) {
-
-  let spec = params.spec;
-  let item = params.item;
-  let field = params.field;
-  let value = params.value;
-
+function getPrimaryKey(spec, item) {
   let primaryKeys = spec.schema.primaryKey || ['id'];
-  let primaryKey = _.map(primaryKeys, key => item[key]).join(',');
+  return _.map(primaryKeys, key => item[key]).join(',');
+}
+
+export function updateEntityField(spec, item, field, value) {
+
+  let primaryKey = getPrimaryKey(spec, item);
 
   APIClient.put(
     '/entity/'+spec.id+'/'+primaryKey+'/'+field.id,
@@ -45,10 +44,45 @@ export function updateEntityField(params) {
       if (err) {
         dispatcher.notifyError(err);
       } else {
-        dispatcher.updateEntityField(spec, field, item, value);
+        dispatcher.updateEntityField(spec, item, field, value);
       }
     }
   );
+
+}
+
+export function updateEntity(spec, item) {
+
+  APIClient.put(
+    '/entity/'+spec.id+'/'+primaryKey,
+    { value: item },
+    (err) => {
+      if (err) {
+        dispatcher.notifyError(err);
+      } else {
+        dispatcher.updateEntity(spec, item);
+      }
+    }
+  );
+
+}
+
+export function removeEntity(spec, item) {
+
+  let primaryKey = getPrimaryKey(spec, item);
+
+  APIClient.del(
+    '/entity/'+spec.id+'/'+primaryKey,
+    (err) => {
+      if (err) {
+        dispatcher.notifyError(err);
+      } else {
+        dispatcher.removeEntity(spec, item);
+      }
+    }
+  );
+
+
 
 }
 

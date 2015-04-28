@@ -26,6 +26,8 @@ export default {
   username: 'ユーザーID',
 
   'Add an endpoint': 'エンドポイント追加',
+  'Are you sure to delete the entity?': '本当に削除してもよろしいですか？',
+  'Deleting the entity': 'データ削除',
   'Select an authorization type': '認証方法を選んでください',
   'Login failed': 'ログインに失敗しました',
 

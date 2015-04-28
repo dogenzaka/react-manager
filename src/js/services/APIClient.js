@@ -102,6 +102,19 @@ class APIClient {
     .end(this._reply(callback, path, body));
   }
 
+  del(path, query, callback) {
+    if (typeof query === 'function') {
+      callback = query;
+      query = {};
+    }
+    console.info("API DELETE", path, query);
+    request
+    .del(this._path(path))
+    .set('x-rm-token', AuthStore.getToken())
+    .query(query)
+    .end(this._reply(callback, path, query));
+  }
+
 }
 
 export default new APIClient();

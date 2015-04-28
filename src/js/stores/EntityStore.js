@@ -16,18 +16,31 @@ class EntityStore extends BaseStore {
   }
 
   setEntityItems(result) {
-    this.setState(result);
+    this.setState({
+      type: 'list',
+      list: result.list,
+      offset: result.offset
+    });
   }
 
-  updateEntityField(spec, field, item, value) {
+  updateEntityField(spec, item, field, value) {
     // Update item value
     item[field.id] = value;
     this.setState({
+      type: 'updateField',
       spec: spec,
       field: field,
       item: item,
       value: value
     });
+  }
+
+  updateEntity(spec, item) {
+    this.setState({ type: 'update', spec: spec, item: item });
+  }
+
+  removeEntity(spec, item) {
+    this.setState({ type: 'remove', spec: spec, item: item });
   }
 
 }

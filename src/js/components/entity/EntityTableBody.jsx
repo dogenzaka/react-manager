@@ -1,12 +1,13 @@
 'use strict';
 
-import React from 'react';
-
-import { getEntityItems, updateEntityField } from '../../actions/EntityAction';
-
 import _ from 'lodash';
+import React from 'react';
+import { Dialog } from 'material-ui';
+
+import i18n from '../../i18n';
 import EntityTableRow from './EntityTableRow.jsx';
 import EntityStore from '../../stores/EntityStore';
+import { getEntityItems, updateEntityField, removeEntity } from '../../actions/EntityAction';
 
 let EntityTableBody = React.createClass({
 
@@ -40,7 +41,7 @@ let EntityTableBody = React.createClass({
   },
 
   _setState(state) {
-    if (state.list) {
+    if (state.type === 'list') {
       let list = this.state.list;
       // Update list
       if (list.length < state.offset + state.list.length) {
@@ -53,8 +54,7 @@ let EntityTableBody = React.createClass({
         this.refs.body.getDOMNode().scrollTop = 0;
       }
       this.setState({ list: list });
-    }
-    if (state.field) {
+    } else if (state.type === 'updateField') {
       // Update field
       _.each(this.refs, component => {
         if (!component.state) {
@@ -66,6 +66,14 @@ let EntityTableBody = React.createClass({
           field.setState({ editing: false });
         }
       });
+    } else if (state.type === 'update') {
+    } else if (state.type === 'remove') {
+      let list = this.state.list;
+      list = _.filter(list, (item) => item !== state.item);
+      this.setState({ list: list });
+      this.refs.removeDialog.dismiss();
+      // get 1 more item which is deleted
+      getEntityItems(this.props.spec.id, { offset: list.length, limit: 1 });
     }
   },
 
@@ -94,6 +102,7 @@ let EntityTableBody = React.createClass({
         fields={fields}
         onChange={this._didChange}
         onChangeField={this._didChangeField}
+        onRemove={this._didRemoveConfirm}
       />;
     });
 
@@ -106,11 +115,24 @@ let EntityTableBody = React.createClass({
       marginTop: marginTop
     };
 
+    let removeActions = [
+      { text: i18n('Cancel') },
+      { text: i18n('Delete'), onClick:this._didRemove, ref:'submit' },
+    ];
+
     return (
       <div className="entity__table__body" onScroll={this._didScroll} ref="body">
         <div className="entity__table__scroll" style={style}>
           {rows}
         </div>
+        <Dialog
+          ref="removeDialog"
+          title={i18n("Deleting the entity")}
+          actions={removeActions}
+          actionFocus='submit'
+          dismissOnClickAway={true}>
+          {i18n('Are you sure to delete the entity?')}
+        </Dialog>
       </div>
     );
 
@@ -134,6 +156,15 @@ let EntityTableBody = React.createClass({
       field: field,
       value: value
     });
+  },
+
+  _didRemoveConfirm(row, item) {
+    this.refs.removeDialog.show();
+    this.state.deletingItem = item;
+  },
+
+  _didRemove() {
+    removeEntity(this.props.spec, this.state.deletingItem);
   },
 
   _didScroll() {

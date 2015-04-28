@@ -15,6 +15,7 @@ let EntityTableRow = React.createClass({
     fields: React.PropTypes.array,
     onChange: React.PropTypes.func,
     onChangeField: React.PropTypes.func,
+    onRemove: React.PropTypes.func,
   },
 
   getInitialState() {
@@ -66,7 +67,7 @@ let EntityTableRow = React.createClass({
     return (
       <div className="entity__table__body__row">
         {columns}
-        <RowMenu items={controlItems} onItemClick={this._didClickRowMenu} />
+        <RowMenu items={controlItems} onClickItem={this._didClickRowMenu} />
       </div>
     );
   },
@@ -76,6 +77,9 @@ let EntityTableRow = React.createClass({
       // Edit
     } else  if (i === 1) {
       // Remove
+      if (this.props.onRemove) {
+        this.props.onRemove(this, this.state.item);
+      }
     }
   },
 
