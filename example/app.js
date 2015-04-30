@@ -178,13 +178,6 @@ var specs = {
             }
           },
           'address.city',
-          {
-            id: 'video',
-            preview: {
-              type: 'video',
-              url: 'https://s3-ap-northeast-1.amazonaws.com/entm-vod/encoded/takusuta/{id}.m3u8'
-            }
-          }
         ]
       },
       previews: [
@@ -215,6 +208,7 @@ app.get('/config', requireAuth, function(req, res) {
     entities: _.values(specs),
     i18n: {
       en: {
+        address: 'Address',
         company: 'Company',
         companyId: 'Company ID',
         phrase: 'Phrase',
@@ -242,6 +236,7 @@ app.get('/config', requireAuth, function(req, res) {
         },
       },
       ja: {
+        address: '住所',
         company: '会社',
         companyId: '会社ID',
         phrase: 'フレーズ',

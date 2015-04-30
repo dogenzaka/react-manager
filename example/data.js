@@ -1,5 +1,6 @@
-var faker = require('faker');
+'use strict';
 
+var faker = require('faker');
 var generate = function(generator, size) {
 
   var list = [];
@@ -24,7 +25,6 @@ var user = function(i) {
       },
       duration: 3600000000
     },
-    userIcon: '55/14/55149073c31b4f9ab651a1b02fcdf9bd/55149073c31b4f9ab651a1b02fcdf9bd%401421660751423-400k-00001',
     createdAt: faker.date.past()
   };
 };
@@ -40,7 +40,6 @@ var company = function(i) {
       city: faker.address.city(),
       streetAddress: faker.address.streetAddress()
     },
-    video: '55/14/55149073c31b4f9ab651a1b02fcdf9bd/55149073c31b4f9ab651a1b02fcdf9bd%401421660751423index',
   };
 };
 

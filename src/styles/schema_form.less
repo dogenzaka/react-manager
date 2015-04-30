@@ -20,10 +20,28 @@
 
   &__item {
 
-    padding: 0px 8px;
+    margin: 0px 8px;
 
     .mui-text-field {
       width: 100%;
+    }
+
+    &--object {
+      position: relative;
+      margin-top: 10px;
+
+      .row {
+        border-left: 1px solid @border-color;
+      }
+
+      &__title {
+        color: @body-second-color;
+        position: absolute;
+        background: #fff;
+        top: -8px;
+        left: -4px;
+        padding: 4px;
+      }
     }
 
     &--choice {

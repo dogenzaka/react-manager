@@ -2,6 +2,7 @@
 
 import React from 'react';
 import _ from 'lodash';
+import i18n from '../../i18n';
 
 import SchemaItem from './SchemaItem.jsx';
 
@@ -68,6 +69,7 @@ let SchemaObject = React.createClass({
     this.state.items = items;
     return (
       <div className="schema-form__item schema-form__item--object row row-wrap">
+        <div className="schema-form__item--object__title">{i18n(name)}</div>
         {items}
       </div>
     );
