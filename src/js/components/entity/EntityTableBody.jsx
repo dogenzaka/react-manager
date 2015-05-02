@@ -26,6 +26,7 @@ let EntityTableBody = React.createClass({
       fields: this.props.spec.features.list.fields,
       list: [],
       range: { start: 0, end: 40 },
+      query: null,
       rowHeight: 48,
       prefetch: 40
     };
@@ -47,6 +48,10 @@ let EntityTableBody = React.createClass({
 
   _setState(state) {
     if (state.type === 'list') {
+      if (state.offset === 0) {
+        this.refs.body.getDOMNode().scrollTop = 0;
+        this.state.list = [];
+      }
       let list = this.state.list;
       // Update list
       if (list.length < state.offset + state.list.length) {
@@ -55,10 +60,7 @@ let EntityTableBody = React.createClass({
       for (let i = 0; i < state.list.length; i++) {
         list[i + state.offset] = state.list[i];
       }
-      if (state.offset === 0) {
-        this.refs.body.getDOMNode().scrollTop = 0;
-      }
-      this.setState({ list: list });
+      this.setState({ list: list, query: state.query });
     } else if (state.type === 'updateField') {
       // Update field
       _.each(this.refs, component => {
@@ -83,7 +85,11 @@ let EntityTableBody = React.createClass({
       this.setState({ list: list });
       this.refs.removeDialog.dismiss();
       // get 1 more item which is deleted
-      getEntityItems(this.props.spec.id, { offset: list.length, limit: 1 });
+      getEntityItems(this.props.spec.id, { offset: list.length, limit: 1, query: this.state.query });
+    } else if (state.showSearch === true) {
+      this.setState({ showSearch: true });
+    } else if (state.showSearch === false) {
+      this.setState({ showSearch: false });
     }
   },
 
@@ -94,6 +100,12 @@ let EntityTableBody = React.createClass({
       list: [],
     });
     getEntityItems(props.spec.id);
+  },
+
+  componentDidUpdate() {
+    if (this.refs.removeDialog) {
+      this.refs.removeDialog.show();
+    }
   },
 
   render() {
@@ -125,29 +137,37 @@ let EntityTableBody = React.createClass({
       marginTop: marginTop
     };
 
-    let removeActions = [
-      { text: i18n('Cancel') },
-      { text: i18n('Delete'), onClick:this._didRemove, ref:'submit' },
-    ];
+    let removeConfirm;
+
+    if (this.state.deletingItem) {
+      let removeActions = [
+        { text: i18n('Cancel') },
+        { text: i18n('Delete'), onClick:this._didRemove, ref:'submit' },
+      ];
+      removeConfirm = (
+        <Dialog
+          ref="removeDialog"
+          title={i18n("Deleting the entity")}
+          actions={removeActions}
+          actionFocus='submit'
+          onDismiss={this._didDismissRemove}
+          dismissOnClickAway={true}>
+          {i18n('Are you sure to delete the entity?')}
+        </Dialog>
+      );
+    }
 
     return (
       <div className="entity__table__body" onScroll={this._didScroll} ref="body">
         <div className="entity__table__scroll" style={style}>
           {rows}
         </div>
-        <Dialog
-          ref="removeDialog"
-          title={i18n("Deleting the entity")}
-          actions={removeActions}
-          actionFocus='submit'
-          dismissOnClickAway={true}>
-          {i18n('Are you sure to delete the entity?')}
-        </Dialog>
         <EntityForm
           ref="editForm"
           spec={this.props.spec}
           onSubmit={this._didSubmit}
         />
+        {removeConfirm}
       </div>
     );
 
@@ -156,7 +176,8 @@ let EntityTableBody = React.createClass({
   _loadMore() {
     let spec = this.props.spec;
     let offset = this.state.list.length;
-    getEntityItems(spec.id, { offset: offset });
+    let query = this.state.query;
+    getEntityItems(spec.id, { offset: offset, query: query });
   },
 
   _didEdit(row, item) {
@@ -175,8 +196,11 @@ let EntityTableBody = React.createClass({
   },
 
   _didRemoveConfirm(row, item) {
-    this.refs.removeDialog.show();
-    this.state.deletingItem = item;
+    this.setState({ deletingItem: item });
+  },
+
+  _didDismissRemove() {
+    this.state.deletingItem = null;
   },
 
   _didRemove() {

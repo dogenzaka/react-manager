@@ -186,14 +186,14 @@ var specs = {
         schema: {
           type: 'object',
           properties: {
-            companyId: { type: 'string' },
+            companyId: 'string',
             country: {
               type: 'string',
               enum: ['Japan','Nepal','India']
             },
-            zipCode: 'number',
-            city: 'string',
-            streetAddress: 'string'
+            zipCode: { type: 'number', cols: 4 },
+            city: { type: 'string', cols: 4 },
+            streetAddress: { type: 'string', cols: 4 },
           }
         }
       }
@@ -335,6 +335,21 @@ var find = function(kind, keys) {
 var search = function(kind, q){
   // your search method here
   var list  = data[kind];
+  list = _.filter(list, function(item) {
+    for (var name in q) {
+      var queryValue = q[name];
+      var itemValue = item[name];
+      if (itemValue && queryValue) {
+        var value = String(itemValue);
+        if (value.indexOf(queryValue) < 0) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+    return true;
+  });
   return list;
 };
 

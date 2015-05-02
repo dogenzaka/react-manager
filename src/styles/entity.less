@@ -6,6 +6,7 @@
   height: 100%;
 
   &__menu {
+
     width: 160px;
     overflow: scroll;
 
@@ -15,12 +16,36 @@
       text-overflow: ellipsis;
       overflow: auto;
     }
+
+    &__search {
+
+      overflow: hidden;
+      height: 0px;
+      transition: height 0.3s cubic-bezier(0.39, 0.58, 0.59, 0.96);
+
+      &__form {
+        top: -12px;
+        position: relative;
+      }
+
+      &__icon {
+        position: absolute;
+        z-index: 5;
+        right: 4px;
+        top: 8px;
+        color: @app-bar-text-color;
+      }
+
+      .mui-text-field-input {
+      }
+
+    }
   }
 
   &__table {
 
-    height: 100%;
     width: 100%;
+    height: 100%;
 
     &__header {
       display: flex;
@@ -30,6 +55,7 @@
       font-weight: bold;
       line-height: 40px;
       color: @body-second-color;
+      border-top: 1px solid @border-color;
       border-bottom: 1px solid @border-color;
       background: #fff;
       z-index: 2;

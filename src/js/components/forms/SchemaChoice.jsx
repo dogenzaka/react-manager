@@ -18,12 +18,14 @@ let SchemaChoice = React.createClass({
 
   getInitialState() {
     return {
-      value: this.props.value
+      value: this.props.value,
+      error: this.props.error,
     };
   },
 
   componentWillReceiveProps(props) {
     this.state.value = props.value;
+    this.state.error = props.error;
   },
 
   getValue() {
@@ -35,6 +37,7 @@ let SchemaChoice = React.createClass({
     let value = this.state.value;
     let schema = this.props.schema;
     let labels = schema.enumLabels || schema.enum;
+    let cols = schema.cols || 12;
 
     let items = _.map(schema.enum, (key, i) => {
       let label = labels[i];
@@ -54,12 +57,17 @@ let SchemaChoice = React.createClass({
     });
 
     let error;
-    if (this.props.error) {
-      error = <div className="schema-form__item--choice__error">{i18n(this.props.error.message)}</div>;
+    if (this.state.error) {
+      error = <div className="schema-form__item--choice__error">{i18n(this.state.error.message)}</div>;
+    }
+
+    let className = "schema-form__item schema-form__item--choice cols-" + cols;
+    if (this.props.mini) {
+      className += " schema-form__item--choice--mini";
     }
 
     return (
-      <div className="schema-form__item schema-form__item--choice cols-12">
+      <div className={className}>
         <label>{i18n(this.props.name)}</label>
         <div className="schema-form__item--choice__items">{items}</div>
         {error}
@@ -72,13 +80,20 @@ let SchemaChoice = React.createClass({
     return () => {
       this.setState({ value: key });
       if (this.props.onChange) {
-        this.props.onChange(key);
+        setTimeout(() => {
+          this.props.onChange(key);
+        }, 0);
       }
     };
   },
 
   _didCancel() {
     this.setState({ value: null });
+    if (this.props.onChange) {
+      setTimeout(() => {
+        this.props.onChange(null);
+      }, 0);
+    }
   },
 
 });

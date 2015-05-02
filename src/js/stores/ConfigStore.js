@@ -46,15 +46,10 @@ class ConfigStore extends BaseStore {
       let list = features.list = features.list || {};
       // Default is first 5 properties
       list.fields = list.fields || _.map(entity.schema.properties, (v,k) => k).slice(0,5);
-
       list.fields = list.fields.map(
         field =>
         (typeof field === 'string') ? { id: field } : field);
     });
-  }
-
-  logout() {
-    this.reset();
   }
 
   /**

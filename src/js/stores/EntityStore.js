@@ -12,14 +12,15 @@ class EntityStore extends BaseStore {
   }
 
   getInitialState() {
-    return {};
+    return { showSearch: false };
   }
 
   setEntityItems(result) {
     this.setState({
       type: 'list',
       list: result.list,
-      offset: result.offset
+      offset: result.offset,
+      query: result.query,
     });
   }
 
@@ -45,6 +46,10 @@ class EntityStore extends BaseStore {
 
   removeEntity(spec, item) {
     this.setState({ type: 'remove', spec: spec, item: item });
+  }
+
+  toggleEntitySearch() {
+    this.setState({ showSearch: !this.state.showSearch });
   }
 
 }

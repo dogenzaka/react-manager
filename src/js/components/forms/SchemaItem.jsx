@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import tv4 from 'tv4';
 
 let SchemaItem = React.createClass({
 
@@ -11,12 +10,12 @@ let SchemaItem = React.createClass({
     path: React.PropTypes.string,
     schema: React.PropTypes.object,
     value: React.PropTypes.any,
-    parentValue: React.PropTypes.object,
     depth: React.PropTypes.number,
     cols: React.PropTypes.number,
-    onChange: React.PropTypes.func,
+    mini: React.PropTypes.bool,
     error: React.PropTypes.object,
     errors: React.PropTypes.array,
+    onChange: React.PropTypes.func,
   },
 
   getInitialState() {
@@ -75,7 +74,7 @@ let SchemaItem = React.createClass({
 
   _makeObject() {
     let SchemaObject = require('./SchemaObject.jsx');
-    return <SchemaObject {...this.props} ref="item" />;
+    return <SchemaObject {...this.props} ref="item" onChange={this._didChange} />;
   },
 
   _makeArray() {
@@ -83,10 +82,8 @@ let SchemaItem = React.createClass({
   },
 
   _didChange(value) {
-    if (tv4.validate(value, this.props.schema)) {
-      this.setState({ error: null });
-    } else {
-      this.setState({ error: tv4.error });
+    if (this.props.onChange) {
+      this.props.onChange(value);
     }
   },
 

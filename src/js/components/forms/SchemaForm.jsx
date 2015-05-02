@@ -21,7 +21,9 @@ let SchemaForm = React.createClass({
     value: React.PropTypes.object,
     onSubmit: React.PropTypes.func,
     onCancel: React.PropTypes.func,
+    onChange: React.PropTypes.func,
     submitLabel: React.PropTypes.string,
+    mini: React.PropTypes.bool,
   },
 
   getInitialState() {
@@ -43,33 +45,68 @@ let SchemaForm = React.createClass({
     this.state.value = props.value || {};
   },
 
+  getValue() {
+    let value = this.refs.item.getValue();
+    this._shrinkValue(value);
+    return value;
+  },
+
+  _shrinkValue(value) {
+    _.each(value, (val, name) => {
+      if (val === undefined || val === null || val === '') {
+        delete value[name];
+      } else if (typeof val === 'object') {
+        this._shrinkValue(val);
+      }
+    });
+  },
+
   render() {
     let schema = this.state.schema;
     let value = this.state.value;
     let saving = !!this.state.saving;
     let done = !!this.state.done;
-    let submitLabel = this.props.submitLabel || i18n('Save');
-    let submitButton = saving ?
-      <RaisedButton primary={true} type="submit" onClick={this._didSubmit}>
-        <FontIcon className="md-spin-reverse md-loop md-2x .schema-form__icon" />
-      </RaisedButton> :
-      <RaisedButton label={submitLabel} primary={true} type="submit" onClick={this._didSubmit} />;
-    if (done) {
-      submitButton = <RaisedButton label={i18n('Done')} type="button" />;
+
+    let buttons;
+
+    if (this.props.onSubmit) {
+
+      let submitLabel = this.props.submitLabel || i18n('Save');
+      let submitButton = saving ? (
+        <RaisedButton primary={true} type="submit" onClick={this._didSubmit}>
+          <FontIcon className="md-spin-reverse md-loop md-2x .schema-form__icon" />
+        </RaisedButton> ) : (
+        <RaisedButton label={submitLabel} primary={true} type="submit" onClick={this._didSubmit} /> );
+      if (done) {
+        submitButton = <RaisedButton label={i18n('Done')} type="button" />;
+      }
+
+      buttons = (
+        <div className="schema-form__buttons">
+          <div className="schema-form__buttons__button">
+            {submitButton}
+          </div>
+          <div className="schema-form__buttons__button">
+            <FlatButton type="button" label={i18n("Cancel")} onClick={this._didCancel} iconClassName="md-cancel" />
+          </div>
+        </div>
+      );
     }
 
     return (
       <div className="schema-form">
         <form onSubmit={this._didSubmit} ref="form">
-          <SchemaItem form={this} name="" path="" schema={schema} value={value} errors={this.state.errors} ref="item" />
-          <div className="schema-form__buttons">
-            <div className="schema-form__buttons__button">
-              {submitButton}
-            </div>
-            <div className="schema-form__buttons__button">
-              <FlatButton type="button" label={i18n("Cancel")} onClick={this._didCancel} iconClassName="md-cancel" />
-            </div>
-          </div>
+          <SchemaItem
+            form={this}
+            name=""
+            path=""
+            schema={schema}
+            value={value}
+            errors={this.state.errors}
+            mini={this.props.mini}
+            onChange={this._didChange}
+            ref="item" />
+          {buttons}
         </form>
       </div>
     );
@@ -99,10 +136,16 @@ let SchemaForm = React.createClass({
     return tv4.validateMultiple(value, this.state.schema);
   },
 
+  _didChange() {
+    if (this.props.onChange) {
+      this.props.onChange(this.getValue());
+    }
+  },
+
   _didSubmit(e) {
     e.preventDefault();
     // Get value from current form
-    let value = this.refs.item.getValue();
+    let value = this.getValue();
     console.info("Submitting schema form", value);
 
     let result = this._validate(value);

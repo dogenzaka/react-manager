@@ -24,6 +24,7 @@ let emitter = new events.EventEmitter();
   'updateEntityField',
   'updateEntity',
   'removeEntity',
+  'toggleEntitySearch',
 
   // Config
   'setConfig',

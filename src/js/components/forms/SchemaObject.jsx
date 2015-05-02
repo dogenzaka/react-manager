@@ -41,7 +41,7 @@ let SchemaObject = React.createClass({
   },
 
   render() {
-    let { name, schema, value, path, errors, ...other } = this.props;
+    let { name, schema, value, path, errors } = this.props;
     let items = _.map(schema.properties, (schema, name) => {
       let itemPath = path + '/' + name;
       let error;
@@ -64,7 +64,8 @@ let SchemaObject = React.createClass({
         parentValue={value}
         schema={schema}
         error={error}
-        {...other} />;
+        mini={this.props.mini}
+        onChange={this._didChange} />;
     });
     this.state.items = items;
     return (
@@ -75,9 +76,9 @@ let SchemaObject = React.createClass({
     );
   },
 
-  _didChange(e) {
+  _didChange() {
     if (this.props.onChange) {
-      this.props.onChange(e.target.value);
+      this.props.onChange(this.getValue());
     }
   },
 

@@ -5,6 +5,7 @@ import React from 'react';
 import FloatingMenu from '../FloatingMenu.jsx';
 import i18n from '../../i18n';
 
+import EntityTableSearch from './EntityTableSearch.jsx';
 import EntityTableHeader from './EntityTableHeader.jsx';
 import EntityTableBody from './EntityTableBody.jsx';
 
@@ -60,6 +61,7 @@ let EntityTable = React.createClass({
 
     return (
       <div className="entity__table">
+        <EntityTableSearch spec={this.state.spec} ref="search" />
         <EntityTableHeader spec={this.state.spec} ref="header" />
         <EntityTableBody spec={this.state.spec} ref="body" />
         <FloatingMenu position="bottom" onClickAdd={this._didClickAdd} ref="floatingMenu" />

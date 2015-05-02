@@ -1,9 +1,14 @@
 'use strict';
 
 import React from 'react';
+import i18n from '../../i18n';
+
 import { TextField } from 'material-ui';
+import { ValidateMixin } from './SchemaMixin';
 
 let SchemaNumber = React.createClass({
+
+  mixins: [ValidateMixin],
 
   propTypes: {
     name: React.PropTypes.string,
@@ -12,34 +17,57 @@ let SchemaNumber = React.createClass({
     onChange: React.PropTypes.func,
   },
 
-  componentDidMount() {
+  getInitialState() {
+    return {
+      value: this.props.value,
+      error: this.props.error,
+    };
   },
 
-  componentWillUnmount() {
+  componentWillReceiveProps(props) {
+    if ('value' in props) {
+      this.state.value = Number(props.value);
+    } else {
+      this.state.value = undefined;
+    }
+    this.state.error = props.error;
+  },
+
+  getValue() {
+    let value = this.refs.text.getValue();
+    if (value.length > 0 && /^[0-9]+$/.test(value)) {
+      return Number(value);
+    }
   },
 
   render() {
 
     let schema = this.props.schema;
-    let error = this.props.error;
+    let error = this.state.error;
+    let value = this.state.value;
+
+    let floatingText;
+    let hintText;
+
+    if (this.props.mini) {
+      hintText = i18n(this.props.name);
+    } else {
+      hintText = i18n(schema.hint);
+      floatingText = i18n(this.props.name);
+    }
 
     return (
       <div className="schema-form__item schema-form__item--number">
         <TextField
-          hintText={schema.hint || ""}
+          type="number"
+          ref="text"
+          hintText={hintText}
           errorText={error && error.message}
-          defaultValue={this.props.value}
-          floatingLabelText={this.props.name}
-          onChange={this._onChange}
-        />
+          value={value}
+          floatingLabelText={floatingText}
+          onChange={this.validate} />
       </div>
     );
-  },
-
-  _onChange(e) {
-    if (this.props.onChange) {
-      this.props.onChange(Number(e.target.value));
-    }
   },
 
 });
