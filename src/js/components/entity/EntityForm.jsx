@@ -23,7 +23,11 @@ let EntityForm = React.createClass({
   },
 
   getInitialState() {
-    return {};
+    return { spec: this.props.spec };
+  },
+
+  componentWillReceiveProps(props) {
+    this.state.spec = props.spec;
   },
 
   componentDidUpdate() {
@@ -40,7 +44,7 @@ let EntityForm = React.createClass({
   },
 
   render() {
-    if (this.state.schema) {
+    if (this.state.value) {
       return this.renderForm();
     } else {
       return <div />;
@@ -48,13 +52,14 @@ let EntityForm = React.createClass({
   },
 
   renderForm() {
+    let spec = this.state.spec;
     return (
       <div className="entity__table__form mui-paper mui-z-depth-1" ref="container">
         <div className="entity__table__form__container">
           <SchemaForm
             ref="form"
-            name={this.state.name}
-            schema={this.state.schema}
+            name={spec.name}
+            schema={spec.schema}
             value={this.state.value}
             onCancel={this._didCancel}
             onSubmit={this._didSubmit}
@@ -77,10 +82,8 @@ let EntityForm = React.createClass({
     }
   },
 
-  show(spec, value) {
+  show(value) {
     this.setState({
-      name: spec.id,
-      schema: spec.schema,
       value: value || {},
     });
   },
@@ -89,11 +92,7 @@ let EntityForm = React.createClass({
     if (this.refs.container) {
       this.refs.container.getDOMNode().style.right = '-610px';
       setTimeout(() => {
-        this.setState({
-          name: null,
-          schema: null,
-          value: null
-        });
+        this.setState({ value: null });
       }, 200);
     }
   },

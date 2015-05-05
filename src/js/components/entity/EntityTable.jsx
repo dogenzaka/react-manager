@@ -8,9 +8,13 @@ import i18n from '../../i18n';
 import EntityTableSearch from './EntityTableSearch.jsx';
 import EntityTableHeader from './EntityTableHeader.jsx';
 import EntityTableBody from './EntityTableBody.jsx';
+import EntityForm from './EntityForm.jsx';
 
 import AppStore from '../../stores/AppStore';
 import ConfigStore from '../../stores/ConfigStore';
+import EntityStore from '../../stores/EntityStore';
+
+import { updateEntity } from '../../actions/EntityAction';
 
 let EntityTable = React.createClass({
 
@@ -28,11 +32,13 @@ let EntityTable = React.createClass({
 
   componentDidMount() {
     AppStore.addListener(this._setAppState);
+    EntityStore.addListener(this._setEntityState);
     this._resize();
   },
 
   componentWillUnmount() {
     AppStore.removeListener(this._setAppState);
+    EntityStore.removeListener(this._setEntityState);
   },
 
   componentWillUpdate() {
@@ -42,6 +48,17 @@ let EntityTable = React.createClass({
   _setAppState(state) {
     if (state.size) {
       this._resize();
+    }
+  },
+
+  _setEntityState(state) {
+    if (state.type === 'update') {
+      // Update entity
+      this.refs.form.refs.form.setState({ done: true });
+      this.refs.form.dismiss();
+    } else if (state.type === 'updateFail') {
+      // Update fail
+      this.refs.form.refs.form.setState({ saving: false });
     }
   },
 
@@ -58,12 +75,12 @@ let EntityTable = React.createClass({
   },
 
   render() {
-
     return (
       <div className="entity__table">
         <EntityTableSearch spec={this.state.spec} ref="search" />
         <EntityTableHeader spec={this.state.spec} ref="header" />
-        <EntityTableBody spec={this.state.spec} ref="body" />
+        <EntityTableBody spec={this.state.spec} ref="body" onEdit={this._didEdit} />
+        <EntityForm ref="form" spec={this.state.spec} onSubmit={this._didSubmit} />
         <FloatingMenu position="bottom" onClickAdd={this._didClickAdd} ref="floatingMenu" />
       </div>
     );
@@ -74,7 +91,15 @@ let EntityTable = React.createClass({
   },
 
   _didClickAdd() {
-    this.refs.floatingMenu.rotateIcon(true);
+    this.refs.form.show({});
+  },
+
+  _didEdit(item) {
+    this.refs.form.show(item);
+  },
+
+  _didSubmit(item) {
+    updateEntity(this.state.spec, item);
   },
 
 });

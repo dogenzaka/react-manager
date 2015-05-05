@@ -8,7 +8,7 @@ import i18n from '../../i18n';
 import EntityTableRow from './EntityTableRow.jsx';
 import EntityStore from '../../stores/EntityStore';
 import EntityForm from './EntityForm.jsx';
-import { getEntityItems, updateEntityField, updateEntity, removeEntity } from '../../actions/EntityAction';
+import { getEntityItems, updateEntityField, removeEntity } from '../../actions/EntityAction';
 
 let EntityTableBody = React.createClass({
 
@@ -30,9 +30,6 @@ let EntityTableBody = React.createClass({
       rowHeight: 48,
       prefetch: 40
     };
-  },
-
-  componentWillMount() {
   },
 
   componentDidMount() {
@@ -72,13 +69,6 @@ let EntityTableBody = React.createClass({
           field.setState({ editing: false, value: state.value });
         }
       });
-    } else if (state.type === 'update') {
-      // Update entity
-      this.refs.editForm.refs.form.setState({ done: true });
-      this.refs.editForm.dismiss();
-    } else if (state.type === 'updateFail') {
-      // Update fail
-      this.refs.editForm.refs.form.setState({ saving: false });
     } else if (state.type === 'remove') {
       let list = this.state.list;
       list = _.filter(list, (item) => item !== state.item);
@@ -181,12 +171,9 @@ let EntityTableBody = React.createClass({
   },
 
   _didEdit(row, item) {
-    let editForm = this.refs.editForm;
-    editForm.show(this.props.spec, item);
-  },
-
-  _didSubmit(item) {
-    updateEntity(this.props.spec, item);
+    if (this.props.onEdit) {
+      this.props.onEdit(item);
+    }
   },
 
   _didChangeField(row, field, value) {

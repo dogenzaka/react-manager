@@ -42,6 +42,7 @@ let SchemaObject = React.createClass({
 
   render() {
     let { name, schema, value, path, errors } = this.props;
+    value = value || {};
     let items = _.map(schema.properties, (schema, name) => {
       let itemPath = path + '/' + name;
       let error;
