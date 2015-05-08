@@ -1,7 +1,9 @@
 'use strict';
 
 var gulp = require('gulp');
+var gulpif = require('gulp-if');
 var webpack = require('gulp-webpack');
+var uglify = require('gulp-uglify');
 var config = require('./config');
 
 gulp.task('webpack', function() {
@@ -16,7 +18,6 @@ gulp.task('webpack', function() {
     },
     cache: true,
     debug: !production,
-    uglify: production,
     devtool: production ? '' : 'inline-source-map',
     module: {
       loaders: [
@@ -30,6 +31,7 @@ gulp.task('webpack', function() {
       xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
     }]
   }))
+  .pipe(gulpif(production, uglify()))
   .pipe(gulp.dest(config.dest+'/js'))
   ;
 
