@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- '0.12'
+env:
+  global:
+  - secure: Ehu9Ki++SJDAH2uz3fv6+coSQuFXwFI38PVMgX/epQj6NuzFx/7VhGofCOjHi6BNj+gMLOfMvsQZyXCMlpekFGqOKcbICFkh6PesFikKbgW0jDzc61UGAQ5MHPfH3g5ChljmpN+5sZOfhpw0X2WReA6/fzql6j1wO+A3ZEm3kSU=
+install:
+- npm install
+script:
+- NODE_ENV=production && gulp build
+after_success:
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && ./deploy.sh'
