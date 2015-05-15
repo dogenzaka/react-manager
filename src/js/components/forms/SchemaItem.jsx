@@ -78,7 +78,12 @@ let SchemaItem = React.createClass({
   },
 
   _makeArray() {
-    return <div>NOT YET IMPLEMENTED</div>;
+    if (this.props.schema.items.type === 'string') {
+      let SchemaText = require('./SchemaText.jsx');
+      return <SchemaText {...this.props} onChange={this._didChange} error={this.state.error} ref="item" />;
+    } else {
+      return <div>NOT YET IMPLEMENTED</div>
+    }
   },
 
   _didChange(value) {

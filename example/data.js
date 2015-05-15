@@ -12,6 +12,7 @@ var generate = function(generator, size) {
 };
 
 var user = function(i) {
+  var official = i%5 == 0
   return {
     userId: 'user_' + i,
     firstName: faker.name.firstName(),
@@ -25,7 +26,9 @@ var user = function(i) {
       },
       duration: 3600000000
     },
-    createdAt: faker.date.past()
+    createdAt: faker.date.past(),
+    official: String(official),
+    role: [''+i, ''+i*2],
   };
 };
 
