@@ -148,6 +148,19 @@ let SchemaForm = React.createClass({
     let value = this.getValue();
     console.info("Submitting schema form", value);
 
+    // support for string array only
+    // not support nested array, object array
+    let arrayFields = _.map(this.props.schema.properties, function(p, key){
+      if (p.type === 'array') return key;
+    });
+
+    value = _.forEach(value, function(v, key) {
+      let has = _.includes(arrayFields, key);
+      if (has && v) value[key] = v.split(',');
+    });
+
+    console.info("Submitting converted schema form", value);
+
     let result = this._validate(value);
     if (result.valid) {
       if (this.props.onSubmit) {
@@ -168,4 +181,3 @@ let SchemaForm = React.createClass({
 });
 
 export default SchemaForm;
-

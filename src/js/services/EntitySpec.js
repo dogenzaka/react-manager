@@ -36,6 +36,13 @@ class EntitySpec {
     return this.schema.primaryKey.indexOf(key) >= 0;
   }
 
+  /**
+   * Check the key is editable
+   */
+  isEditable(key) {
+    return this.schema.primaryKey.indexOf(key) < 0 && this.schema.uneditable.indexOf(key) < 0;
+  }
+
 }
 
 export default EntitySpec;
