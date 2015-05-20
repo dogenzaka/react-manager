@@ -95,19 +95,18 @@ let SchemaForm = React.createClass({
 
     return (
       <div className="schema-form">
-        <form onSubmit={this._didSubmit} ref="form">
-          <SchemaItem
-            form={this}
-            name=""
-            path=""
-            schema={schema}
-            value={value}
-            errors={this.state.errors}
-            mini={this.props.mini}
-            onChange={this._didChange}
-            ref="item" />
-          {buttons}
-        </form>
+        <SchemaItem
+          form={this}
+          name=""
+          path=""
+          schema={schema}
+          value={value}
+          errors={this.state.errors}
+          mini={this.props.mini}
+          onChange={this._didChange}
+          onSubmit={this._didSubmit}
+          ref="item" />
+        {buttons}
       </div>
     );
   },
@@ -142,8 +141,7 @@ let SchemaForm = React.createClass({
     }
   },
 
-  _didSubmit(e) {
-    e.preventDefault();
+  _didSubmit() {
     // Get value from current form
     let value = this.getValue();
     console.info("Submitting schema form", value);

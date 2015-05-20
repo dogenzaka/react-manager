@@ -9,4 +9,10 @@ export default {
   url: 'URL',
   username: 'User name',
 
+  // Date Format
+  format: {
+    date: 'MM-DD-YYYY',
+    dateTime: 'MMM D, YYYY h:mm A'
+  },
+
 };

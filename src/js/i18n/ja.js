@@ -34,6 +34,11 @@ export default {
 
   'site.title': 'React Manager',
 
+  format: {
+    date: 'YYYY-MM-DD',
+    dateTime: 'YYYY-MM-DD HH:mm:ss',
+  },
+
   tv4: {
     INVALID_TYPE: "正しい形式で入力してください",
     ENUM_MISMATCH: "{enum}に含まれる値ではありません",

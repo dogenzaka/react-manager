@@ -11,6 +11,7 @@
     "lodash": "^3.6.0",
     "material-design-fonticons": "^1.0.0",
     "material-ui": "^0.7.0",
+    "moment": "^2.10.3",
     "node-uuid": "^1.4.2",
     "react": "^0.13.0",
     "react-list": "^0.3.1",

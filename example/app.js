@@ -75,7 +75,7 @@ app.options('*', function(req, res) {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'x-rm-token, Accept, Content-Type');
   res.send({'result': 'ok'});
-})
+});
 
 app.get('/auth', function(req, res) {
   res.json({
@@ -131,7 +131,8 @@ var specs = {
         gender: { type: 'string', enum: ['male','female']},
         email: { type: 'string', style: 'long' },
         phone: 'string',
-        createdAt: { type: 'string', format: 'date' },
+        birthDate: { type: 'string', format: 'date' },
+        createdAt: { type: 'string', format: 'datetime' },
         official: {type: 'string', enum: ['true','false']},
         role: {
           type: 'array',
@@ -229,6 +230,7 @@ app.get('/config', requireAuth, function(req, res) {
     i18n: {
       en: {
         address: 'Address',
+        birthDate: 'Brith Date',
         company: 'Company',
         companyId: 'Company ID',
         phrase: 'Phrase',
@@ -259,6 +261,7 @@ app.get('/config', requireAuth, function(req, res) {
       },
       ja: {
         address: '住所',
+        birthDate: '生年月日',
         company: '会社',
         companyId: '会社ID',
         phrase: 'フレーズ',

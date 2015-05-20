@@ -66,7 +66,8 @@ let SchemaObject = React.createClass({
         schema={schema}
         error={error}
         mini={this.props.mini}
-        onChange={this._didChange} />;
+        onChange={this._didChange}
+        onSubmit={this._didSubmit} />;
     });
     this.state.items = items;
     return (
@@ -80,6 +81,12 @@ let SchemaObject = React.createClass({
   _didChange() {
     if (this.props.onChange) {
       this.props.onChange(this.getValue());
+    }
+  },
+
+  _didSubmit() {
+    if (this.props.onSubmit) {
+      this.props.onSubmit();
     }
   },
 

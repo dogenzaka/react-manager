@@ -1,12 +1,13 @@
 'use strict';
 
 import React from 'react';
+import moment from 'moment';
 import i18n from '../../i18n';
 
-import { TextField } from 'material-ui';
+import { DatePicker } from 'material-ui';
 import { ValidateMixin } from './SchemaMixin';
 
-let SchemaText = React.createClass({
+let SchemaDateTime = React.createClass({
 
   mixins: [ValidateMixin],
 
@@ -15,7 +16,6 @@ let SchemaText = React.createClass({
     schema: React.PropTypes.object,
     value: React.PropTypes.string,
     onChange: React.PropTypes.func,
-    onSubmit: React.PropTypes.func,
     error: React.PropTypes.object,
   },
 
@@ -32,18 +32,19 @@ let SchemaText = React.createClass({
   },
 
   getValue() {
-    return this.refs.text.getValue();
+    let date = this.refs.picker.getDate();
+    return this.formatDate(date);
+  },
+
+  formatDate(date) {
+    return moment(date).format('YYYY-MM-DD');
   },
 
   render() {
 
     let schema = this.props.schema;
     let error = this.state.error;
-    let cols = schema.cols || 12;
-    let type = 'text';
-    if (schema.format === 'password') {
-      type = 'password';
-    }
+    let cols = schema.cols || 4;
     let floatingText;
     let hintText;
 
@@ -55,30 +56,22 @@ let SchemaText = React.createClass({
     }
 
     return (
-      <div className={"schema-form__item schema-form__item--text cols-"+cols}>
-        <TextField
-          type={type}
-          ref="text"
+      <div className={"schema-form__item schema-form__item--date cols-"+cols}>
+        <DatePicker
+          ref="picker"
+          mode="landscape"
+          formatDate={this.formatDate}
           hintText={hintText}
           errorText={error && error.message}
-          value={this.state.value}
-          floatingLabelText={floatingText}
-          onKeyDown={this._didKeyDown}
-          onChange={this.validate} />
+          defaultValue={this.state.value}
+          floatingLabelText={floatingText} />
       </div>
     );
   },
 
-  _didKeyDown(e) {
-    // Enter key
-    if (e.keyCode === 13) {
-      if (this.props.onSubmit) {
-        this.props.onSubmit();
-      }
-    }
-  },
-
 });
 
-export default SchemaText;
+export default SchemaDateTime;
+
+
 
