@@ -70,6 +70,13 @@ if (process.env.GOOGLE_CLIENT_ID) {
   }));
 }
 
+app.options('*', function(req, res) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'x-rm-token, Accept, Content-Type');
+  res.send({'result': 'ok'});
+})
+
 app.get('/auth', function(req, res) {
   res.json({
     strategies: [{
@@ -125,6 +132,14 @@ var specs = {
         email: { type: 'string', style: 'long' },
         phone: 'string',
         createdAt: { type: 'string', format: 'date' },
+        official: {type: 'string', enum: ['true','false']},
+        role: {
+          type: 'array',
+          disable: true,
+          items: {
+            type: 'string'
+          }
+        }
       },
       primaryKey: ['userId'],
       required: ['userId','firstName','lastName']
@@ -138,6 +153,8 @@ var specs = {
           { id: 'email', style: { flex: 6 }},
           'phone',
           { id: 'createdAt', format: 'short-date' },
+          'official',
+          'role'
         ]
       },
       download: true,
@@ -152,7 +169,10 @@ var specs = {
         companyId: { type: 'string', maxLength: 100, minLength: 1 },
         name: { type: 'string', maxLength: 100, minLength: 1 },
         phrase: 'string',
-        country: 'string',
+        country: {
+          type: 'string',
+          disable: true,
+        },
         address: {
           type: 'object',
           properties: {
@@ -234,6 +254,8 @@ app.get('/config', requireAuth, function(req, res) {
         site: {
           title: 'Example App',
         },
+        official: 'isOfficial',
+        role: 'role'
       },
       ja: {
         address: '住所',
@@ -265,6 +287,8 @@ app.get('/config', requireAuth, function(req, res) {
         site: {
           title: 'サンプルアプリ',
         },
+        official: 'オフィシャルユーザー',
+        role: '権限'
       }
     },
 

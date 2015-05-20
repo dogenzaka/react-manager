@@ -46,8 +46,7 @@ let EntityTableRow = React.createClass({
     let columns = fields.map(field => {
 
       let value = _.get(item, field.id);
-      let isPrimary = spec.isPrimary(field.id);
-      let isEditable = !isPrimary;
+      let isEditable = spec.isEditable(field.id);
 
       return <EntityTableColumn
         ref={field.id}
@@ -93,4 +92,3 @@ let EntityTableRow = React.createClass({
 });
 
 export default EntityTableRow;
-

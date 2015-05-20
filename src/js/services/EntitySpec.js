@@ -36,6 +36,17 @@ class EntitySpec {
     return this.schema.primaryKey.indexOf(key) >= 0;
   }
 
+  /**
+   * Check the key is editable
+   */
+  isEditable(key) {
+    let disable = false;
+    if (this.schema.properties[key]) {
+      disable = this.schema.properties[key].disable;
+    }
+    return this.schema.primaryKey.indexOf(key) < 0 && !Boolean(disable);
+  }
+
 }
 
 export default EntitySpec;
