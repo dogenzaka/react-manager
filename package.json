@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Extensible management console running on react",
   "author": "dogenzaka.io",
+  "main": "main.js",
   "license": "MIT",
   "dependencies": {
     "animate.css": "^3.2.5",
@@ -26,6 +27,7 @@
     "express": "^4.12.3",
     "faker": "^2.1.2",
     "gulp": "^3.8.7",
+    "gulp-atom-shell": "^0.10.0",
     "gulp-bower": "0.0.10",
     "gulp-concat": "^2.5.2",
     "gulp-connect": "^2.2.0",
