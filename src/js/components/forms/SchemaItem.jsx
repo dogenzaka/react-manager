@@ -56,6 +56,8 @@ let SchemaItem = React.createClass({
         return this._makeNumber();
       case 'object':
         return this._makeObject();
+      case 'boolean':
+        return this._makeBoolean();
       case 'array':
         return this._makeArray();
       default:
@@ -112,6 +114,17 @@ let SchemaItem = React.createClass({
   _makeObject() {
     let SchemaObject = require('./SchemaObject.jsx');
     return <SchemaObject
+      {...this.getChildProps()}
+      onChange={this._didChange}
+      onSubmit={this._didSubmit}
+      error={this.state.error}
+      ref="item"
+      />;
+  },
+
+  _makeBoolean() {
+    let SchemaBoolean = require('./SchemaBoolean.jsx');
+    return <SchemaBoolean
       {...this.getChildProps()}
       onChange={this._didChange}
       onSubmit={this._didSubmit}

@@ -46,6 +46,7 @@ let EntityTableRow = React.createClass({
     let columns = fields.map(field => {
 
       let value = _.get(item, field.id);
+      value = String(value);
       let isEditable = spec.isEditable(field.id);
 
       return <EntityTableColumn
