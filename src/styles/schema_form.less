@@ -60,7 +60,36 @@
       padding-top: 24px;
       position: relative;
 
-      .choice_set;
+      label {
+        line-height: 36px;
+        margin-right: 10px;
+        color: rgba(0,0,0,0.5);
+      }
+
+      &__error {
+        font-size: 12px;
+        position: absolute;
+        left: 8px;
+        bottom: -16px;
+        color: @input-error-color;
+      }
+
+      &__items {
+        display: flex;
+        flex-direction: row;
+
+        &__item {
+          .mui-flat-button {
+          }
+          .mui-flat-button.mui-is-primary {
+            font-weight: bold;
+          }
+        }
+      }
+
+      &--mini {
+        padding-top: 0px;
+      }
     }
 
     &--boolean {
@@ -69,7 +98,16 @@
       padding-top: 24px;
       position: relative;
 
-      .choice_set;
+      label {
+        line-height: 36px;
+        margin-right: 10px;
+        color: rgba(0,0,0,0.5);
+      }
+
+      &__items {
+        margin: 0 0 0 24px;
+        padding: 5px 0 0 0;
+      }
     }
 
     &--array {
@@ -83,38 +121,5 @@
       }
     }
 
-  }
-}
-
-.choice_set {
-  label {
-    line-height: 36px;
-    margin-right: 10px;
-    color: rgba(0,0,0,0.5);
-  }
-
-  &__error {
-    font-size: 12px;
-    position: absolute;
-    left: 8px;
-    bottom: -16px;
-    color: @input-error-color;
-  }
-
-  &__items {
-    display: flex;
-    flex-direction: row;
-
-    &__item {
-      .mui-flat-button {
-      }
-      .mui-flat-button.mui-is-primary {
-        font-weight: bold;
-      }
-    }
-  }
-
-  &--mini {
-    padding-top: 0px;
   }
 }

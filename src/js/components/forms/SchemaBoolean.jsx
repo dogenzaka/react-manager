@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import React from 'react';
 
-import { FlatButton } from 'material-ui';
+import { Toggle } from 'material-ui';
 import i18n from '../../i18n';
 
 let SchemaBoolean = React.createClass({
@@ -34,32 +34,9 @@ let SchemaBoolean = React.createClass({
 
   render() {
 
-    let value = String(this.state.value);
+    let value = this.state.value;
     let schema = this.props.schema;
-    let labels = ['true', 'false'];
     let cols = schema.cols || 12;
-
-    let items = _.map(labels, (key, i) => {
-      let label = labels[i];
-      if (value === key) {
-        return (
-          <div key={key} className="schema-form__item--boolean__items__item">
-            <FlatButton type="button" label={i18n(label)} primary={true} onClick={this._didCancel} />
-          </div>
-        );
-      } else {
-        return (
-          <div key={key} className="schema-form__item--boolean__items__item">
-            <FlatButton type="button" label={i18n(label)} onClick={this._didClickItem(key)} />
-          </div>
-        );
-      }
-    });
-
-    let error;
-    if (this.state.error) {
-      error = <div className="schema-form__item--boolean__error">{i18n(this.state.error.message)}</div>;
-    }
 
     let className = "schema-form__item schema-form__item--boolean cols-" + cols;
     if (this.props.mini) {
@@ -69,31 +46,24 @@ let SchemaBoolean = React.createClass({
     return (
       <div className={className}>
         <label>{i18n(this.props.name)}</label>
-        <div className="schema-form__item--boolean__items">{items}</div>
-        {error}
+        <div className="schema-form__item--boolean__items">
+          <Toggle toggled={value} onToggle={this._didToggle()} />
+        </div>
       </div>
     );
 
   },
 
-  _didClickItem(key) {
+  _didToggle() {
     return () => {
-      this.setState({ value: key });
+      let _value = !this.state.value
+      this.setState({ value: _value });
       if (this.props.onChange) {
         setTimeout(() => {
-          this.props.onChange(key);
+          this.props.onChange(_value);
         }, 0);
       }
     };
-  },
-
-  _didCancel() {
-    this.setState({ value: null });
-    if (this.props.onChange) {
-      setTimeout(() => {
-        this.props.onChange(null);
-      }, 0);
-    }
   },
 
 });
