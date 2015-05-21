@@ -2,6 +2,7 @@
 export default {
 
   // Words
+  Add: '追加',
   Cancel: 'キャンセル',
   Delete: '削除',
   Edit: '編集',

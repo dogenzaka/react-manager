@@ -1,0 +1,52 @@
+/* for react-tagsinput component */
+.react-tagsinput {
+
+  background: #fff;
+  overflow-y: auto;
+
+  &-tag {
+    display: block;
+    background: @primary-3-color;
+    color: #333;
+    float: left;
+    padding: 2px 6px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    text-decoration: none;
+    border-radius: 2px;
+  }
+
+  &-invalid {
+    background: #FBD8DB !important;
+    color: #90111A !important;
+  }
+
+  &-validating {
+    background: #FFFACD !important;
+  }
+
+  &-remove {
+
+    cursor: pointer;
+    margin-left: 4px;
+
+    &:before {
+      font-family: "Material Design Iconic Font";
+      font-weight: bold;
+      color: @disabled-color;
+      font-size: 10px;
+      content: "\f29a";
+    }
+  }
+
+  &-input {
+    background: transparent;
+    color: @body-second-color;
+    padding: 4px 4px;
+    width: 120px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid @border-color;
+  }
+}
+

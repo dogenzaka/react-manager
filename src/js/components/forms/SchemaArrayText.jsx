@@ -2,9 +2,8 @@
 
 import React from 'react';
 import i18n from '../../i18n';
-import TagsInput from 'react-tagsinput'
 
-import { TextField } from 'material-ui';
+import TagsInput from 'react-tagsinput';
 import { ValidateMixin } from './SchemaMixin';
 
 let SchemaArrayText = React.createClass({
@@ -46,15 +45,13 @@ let SchemaArrayText = React.createClass({
     let schema = this.props.schema;
     let error = this.state.error;
     let cols = schema.cols || 12;
-    let localizedLabel = i18n(this.props.name);
-    let placeholder = 'Add ' + localizedLabel
 
     return (
       <div className={"schema-form__item schema-form__item--array cols-"+cols}>
-        <label>{localizedLabel}</label>
+        <label>{i18n(this.props.name)}</label>
         <TagsInput
           ref="tags"
-          placeholder={placeholder}
+          placeholder={i18n('Add')}
           valueLink={this.linkState('tags')}
           onChange={this.saveTags} />
       </div>
