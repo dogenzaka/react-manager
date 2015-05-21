@@ -133,7 +133,7 @@ var specs = {
         phone: 'string',
         birthDate: { type: 'string', format: 'date' },
         createdAt: { type: 'string', format: 'datetime' },
-        official: {type: 'string', enum: ['true','false']},
+        official: {type: 'boolean'},
         role: {
           type: 'array',
           disable: true,
