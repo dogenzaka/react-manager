@@ -8,6 +8,7 @@ import _ from 'lodash';
 import i18n from '../../i18n';
 import { getAuthConfig } from '../../actions/AuthAction';
 import AuthStore from '../../stores/AuthStore';
+import EndpointStore from '../../stores/EndpointStore';
 
 let { RaisedButton } = mui;
 
@@ -49,7 +50,9 @@ export default React.createClass({
         this.context.router.transitionTo('loginForm');
       } else if (strategy.type === 'google') {
         // Move to google oauth
-        window.location.href = '/oauth/google';
+        let ep = EndpointStore.getActiveEndpoint();
+        let state = window.location.protocol + '//' + window.location.host + window.location.pathname;
+        window.location.href = ep.url + '/oauth/google?state=' + encodeURIComponent(state);
       }
     };
   },

@@ -302,7 +302,6 @@ app.get('/config', requireAuth, function(req, res) {
 app.get('/oauth/google',
   passport.authenticate('google', {
     scope: [
-      //'https://www.googleapis.com/auth/plus.login',
       'https://www.googleapis.com/auth/plus.profile.emails.read',
       'https://www.googleapis.com/auth/userinfo.profile'
     ].join(' ')
@@ -314,7 +313,8 @@ app.get('/oauth/google/callback',
     failureRedirect: '/login'
   }),
   function(req, res) {
-    res.redirect('/#/login/token/' + req.user.token);
+    var state = req.params.state || '';
+    res.redirect(state + '/#/login/token/'+req.user.token);
   }
 );
 
