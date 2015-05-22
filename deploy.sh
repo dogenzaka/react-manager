@@ -2,7 +2,7 @@
 set -e # exit with nonzero exit code if anything fails
 
 # go to the out directory and create a *new* Git repo
-cd app
+cd build
 git init
 
 # inside this git repo we'll pretend to be a new user
