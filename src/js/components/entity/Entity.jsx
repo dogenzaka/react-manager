@@ -3,11 +3,12 @@
 import React from 'react';
 import { RouteHandler } from 'react-router';
 import AuthMixin from '../../mixins/AuthMixin';
+import ChildContextMixin from '../../mixins/ChildContextMixin';
 import EntityMenu from './EntityMenu.jsx';
 
 let Entity = React.createClass({
 
-  mixins: [AuthMixin],
+  mixins: [AuthMixin, ChildContextMixin],
 
   getInitialState() {
     return {};
@@ -37,4 +38,3 @@ let Entity = React.createClass({
 });
 
 export default Entity;
-
