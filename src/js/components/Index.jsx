@@ -19,7 +19,7 @@ export default React.createClass({
 
   render() {
     return (
-      <div id="main" />
+      <div id="main" style={{height:'100%'}} />
     );
   }
 

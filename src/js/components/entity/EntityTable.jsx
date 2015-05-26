@@ -75,8 +75,16 @@ let EntityTable = React.createClass({
   },
 
   render() {
+
+    let styles = {
+      table: {
+        width: '100%',
+        height: '100%',
+      }
+    };
+
     return (
-      <div className="entity__table">
+      <div style={styles.table}>
         <EntityTableSearch spec={this.state.spec} ref="search" />
         <EntityTableHeader spec={this.state.spec} ref="header" />
         <EntityTableBody spec={this.state.spec} ref="body" onEdit={this._didEdit} />

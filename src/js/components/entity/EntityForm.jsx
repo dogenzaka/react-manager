@@ -5,6 +5,7 @@ import mui from 'material-ui';
 import SchemaForm from '../forms/SchemaForm.jsx';
 
 let { ClickAwayable } = mui.Mixins;
+let { Paper } = mui;
 
 let EntityForm = React.createClass({
 
@@ -31,8 +32,8 @@ let EntityForm = React.createClass({
   },
 
   componentDidUpdate() {
-    if (this.refs.container) {
-      this.refs.container.getDOMNode().style.right = '0px';
+    if (this.refs.body) {
+      React.findDOMNode(this.refs.body).style.right = '0px';
       this._bindClickAway();
     } else {
       this._unbindClickAway();
@@ -52,20 +53,42 @@ let EntityForm = React.createClass({
   },
 
   renderForm() {
+
     let spec = this.state.spec;
+    let styles = {
+      form: {
+        position: 'fixed',
+        top: '64px',
+        background: '#fff',
+        zIndex: 3,
+        width: '600px',
+        right: '-610px',
+        height: 'calc(100% - 64px)',
+        transitionProperty: 'right',
+        transitionDuration: '0.2s',
+        transitionTimingFunction: 'ease-out',
+        padding: '0 16px 0 16px',
+      },
+      container: {
+        height: 'calc(100% - 52px)',
+        overflow: 'scroll',
+      },
+    };
+
     return (
-      <div className="entity__table__form mui-paper mui-z-depth-1" ref="container">
-        <div className="entity__table__form__container">
+      <Paper style={styles.form} ref="body">
+        <div style={styles.container}>
           <SchemaForm
             ref="form"
             name={spec.name}
             schema={spec.schema}
             value={this.state.value}
+            fixedButtons={true}
             onCancel={this._didCancel}
             onSubmit={this._didSubmit}
           />
         </div>
-      </div>
+      </Paper>
     );
   },
 
@@ -89,8 +112,8 @@ let EntityForm = React.createClass({
   },
 
   dismiss() {
-    if (this.refs.container) {
-      this.refs.container.getDOMNode().style.right = '-610px';
+    if (this.refs.body) {
+      React.findDOMNode(this.refs.body).style.right = '-610px';
       setTimeout(() => {
         this.setState({ value: null });
       }, 200);

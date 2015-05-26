@@ -57,24 +57,42 @@ export default React.createClass({
     };
   },
 
+  styles: {
+    container: {
+      maxWidth: '480px',
+    },
+    description: {
+      fontSize: '1.1em',
+      padding: '8px 0',
+    },
+    strategies: {
+    },
+    button: {
+      marginRight: '10px',
+    },
+  },
+
   render() {
 
     let config = this.state.authConfig;
     let strategies;
     if (config) {
-      strategies = _.map(config.strategies, strategy => <RaisedButton
-        key={strategy.name}
-        label={i18n(strategy.name)}
-        onClick={this._didClick(strategy)}
-        primary={true} />);
+      strategies = _.map(config.strategies, strategy => (
+        <RaisedButton
+          key={strategy.name}
+          style={this.styles.button}
+          label={i18n(strategy.name)}
+          onClick={this._didClick(strategy)}
+          primary={true} />
+      ));
     }
 
     return (
-      <div>
-        <div className="login__description">
+      <div style={this.styles.container}>
+        <div style={this.styles.description}>
           {i18n("Select an authorization type")}
         </div>
-        <div className="login__strategies">
+        <div style={this.styles.strategies}>
           {strategies}
         </div>
       </div>

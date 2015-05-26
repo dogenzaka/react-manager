@@ -55,8 +55,14 @@ let SchemaDateTime = React.createClass({
       floatingText = i18n(this.props.name);
     }
 
+    let styles = {
+      date: {
+        padding: '0 0 0 8px',
+      },
+    };
+
     return (
-      <div className={"schema-form__item schema-form__item--date cols-"+cols}>
+      <div className={"cols-"+cols} style={styles.date}>
         <DatePicker
           ref="picker"
           mode="landscape"
@@ -64,6 +70,7 @@ let SchemaDateTime = React.createClass({
           hintText={hintText}
           errorText={error && error.message}
           defaultValue={this.state.value}
+          style={{width:'100%'}}
           floatingLabelText={floatingText} />
       </div>
     );

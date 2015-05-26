@@ -1,6 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
 import React from 'react';
 
 import { Toggle } from 'material-ui';
@@ -11,7 +10,7 @@ let SchemaBoolean = React.createClass({
   propTypes: {
     name: React.PropTypes.string,
     schema: React.PropTypes.object.isRequired,
-    value: React.PropTypes.boolean,
+    value: React.PropTypes.bool,
     onChange: React.PropTypes.func,
     error: React.PropTypes.object,
   },
@@ -36,17 +35,32 @@ let SchemaBoolean = React.createClass({
 
     let value = this.state.value;
     let schema = this.props.schema;
-    let cols = schema.cols || 12;
+    let cols = schema.cols || 4;
 
-    let className = "schema-form__item schema-form__item--boolean cols-" + cols;
-    if (this.props.mini) {
-      className += " schema-form__item--boolean--mini";
-    }
+    let styles = {
+      bool: {
+        paddingTop: '24px',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'row',
+      },
+      label: {
+        lineHeight: '36px',
+        marginRight: '10px',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        color: 'rgba(0,0,0,0.5)',
+      },
+      items: {
+        padding: '5px 0 0 0',
+      },
+    };
 
     return (
-      <div className={className}>
-        <label>{i18n(this.props.name)}</label>
-        <div className="schema-form__item--boolean__items">
+      <div className={"cols-"+cols} style={styles.bool}>
+        <label style={styles.label}>{i18n(this.props.name)}</label>
+        <div style={styles.items}>
           <Toggle toggled={value} onToggle={this._didToggle()} />
         </div>
       </div>
@@ -56,7 +70,7 @@ let SchemaBoolean = React.createClass({
 
   _didToggle() {
     return () => {
-      let _value = !this.state.value
+      let _value = !this.state.value;
       this.setState({ value: _value });
       if (this.props.onChange) {
         setTimeout(() => {

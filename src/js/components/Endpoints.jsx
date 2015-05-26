@@ -9,11 +9,15 @@ import { selectEndpoint, addEndpoint, updateEndpoint, removeEndpoint } from '../
 
 import FloatingMenu from './FloatingMenu.jsx';
 import EndpointStore from '../stores/EndpointStore';
-import RowMenu from '../components/RowMenu.jsx';
-import SchemaForm from '../components/forms/SchemaForm.jsx';
+import RowMenu from './RowMenu.jsx';
+import SchemaForm from './forms/SchemaForm.jsx';
+import DialogWrapper from './DialogWrapper.jsx';
+
 import i18n from '../i18n';
 
-let { Dialog, FontIcon } = mui;
+let { FontIcon } = mui;
+
+import { Theme } from '../styles';
 
 export default React.createClass({
 
@@ -56,6 +60,52 @@ export default React.createClass({
 
   render() {
 
+    let styles = {
+      endpoints: {
+        height: 'calc(100% - 64px)',
+        paddingTop: '64px',
+      },
+      header: {
+        position: 'fixed',
+        display: 'flex',
+        width: '100%',
+        paddingLeft: '70px',
+        lineHeight: '48px',
+        color: Theme.palette.textSecondColor,
+        zIndex: 2,
+        background: '#fff',
+        fontWeight: 'bold',
+        borderBottom: '1px solid ' + Theme.palette.borderColor,
+      },
+      headerName: {
+        width: '180px',
+      },
+      items: {
+        paddingTop: '48px',
+        height: 'calc(100% - 48px)',
+        overflow: 'scroll',
+      },
+      item: {
+        display: 'flex',
+        position: 'relative',
+        padding: '16px 0 16px 14px',
+        cursor: 'pointer',
+      },
+      itemMark: {
+        width: '48px',
+        padding: '10px 0 0 10px',
+        color: Theme.palette.accent1Color,
+      },
+      itemName: {
+        lineHeight: '48px',
+        width: '180px',
+      },
+      itemUrl: {
+        lineHeight: '48px',
+        marginRight: 'auto',
+      },
+    };
+
     let menuItems = _.map(this.state.endpoints, endpoint => {
       // Get active mark
       let selected = endpoint.selected ?
@@ -67,10 +117,10 @@ export default React.createClass({
       ];
 
       return (
-        <div className="endpoints__items__item" key={endpoint.name} onClick={this._didSelect(endpoint)}>
-          <div className="endpoints__items__item__mark">{selected}</div>
-          <div className="endpoints__items__item__name">{endpoint.name}</div>
-          <div className="endpoints__items__item__url">{endpoint.url}</div>
+        <div className="hover" style={styles.item} key={endpoint.name} onClick={this._didSelect(endpoint)}>
+          <div style={styles.itemMark}>{selected}</div>
+          <div style={styles.itemName}>{endpoint.name}</div>
+          <div style={styles.itemUrl}>{endpoint.url}</div>
           <RowMenu items={controlItems} onClickItem={this._didClickRowMenu} />
         </div>
       );
@@ -79,13 +129,13 @@ export default React.createClass({
     return (
       <div id="main">
         <FloatingMenu position="top" onClickAdd={this._didClickAdd} ref="floatingMenu" />
-        <div className="endpoints">
-          <div className="endpoints__header">
-            <div className="endpoints__header__name">{i18n('Name')}</div>
-            <div className="endpoints__header__url">{i18n('URL')}</div>
-            <div className="endpoints__header__menu"></div>
+        <div style={styles.endpoints}>
+          <div style={styles.header}>
+            <div style={styles.headerName}>{i18n('Name')}</div>
+            <div>{i18n('URL')}</div>
+            <div></div>
           </div>
-          <div className="endpoints__items">
+          <div style={styles.items}>
             {menuItems}
           </div>
         </div>
@@ -110,14 +160,14 @@ export default React.createClass({
 
   _didClickAdd() {
     this._dialog = React.render(
-      <Dialog key={this.getDialogKey()} title={i18n('Add an endpoint')} onDismiss={this._didDismissDialog}>
+      <DialogWrapper key={this.getDialogKey()} title={i18n('Add an endpoint')} onDismiss={this._didDismissDialog}>
         <SchemaForm
           schema={this.schema}
           value={{}}
           onSubmit={this._didSubmitAdd}
           onCancel={this._didCancel}
         />
-      </Dialog>, document.getElementById("dialog"));
+      </DialogWrapper>, document.getElementById("dialog"));
     this._dialog.show();
     this.refs.floatingMenu.rotateIcon(true);
   },
@@ -126,13 +176,15 @@ export default React.createClass({
     addEndpoint(endpoint);
   },
 
-  _didSubmitEdit(endpoint) {
+  _didSubmitEdit(index, endpoint) {
+    endpoint.index = index;
     updateEndpoint(endpoint);
   },
 
   _didCancel() {
     this._dialog.dismiss();
-    React.unmountComponentAtNode(this._dialog.getDOMNode());
+    let node = React.findDOMNode(this._dialog);
+    React.unmountComponentAtNode(node);
     this._dialog = null;
   },
 
@@ -151,14 +203,14 @@ export default React.createClass({
     if (i === 0) {
       // Edit
       this._dialog = React.render(
-        <Dialog key={this.getDialogKey()} title={i18n('Edit an endpoint')} onDismiss={this._didDismissDialog}>
+        <DialogWrapper key={this.getDialogKey()} title={i18n('Edit an endpoint')} onDismiss={this._didDismissDialog}>
           <SchemaForm
             schema={this.schema}
             value={item.payload}
-            onSubmit={this._didSubmitEdit}
+            onSubmit={this._didSubmitEdit.bind(this, item.payload.index)}
             onCancel={this._didCancel}
           />
-        </Dialog>, document.getElementById("dialog"));
+        </DialogWrapper>, document.getElementById("dialog"));
       this._dialog.show();
     }
     if (i === 1) {

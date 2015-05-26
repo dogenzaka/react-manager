@@ -12,7 +12,7 @@ import { getEntityItems, updateEntityField, removeEntity } from '../../actions/E
 
 let EntityTableBody = React.createClass({
 
-  contentType: {
+  contextTypes: {
     router: React.PropTypes.func,
   },
 
@@ -122,11 +122,6 @@ let EntityTableBody = React.createClass({
     let marginTop = range.start * rowHeight;
     let height = (list.length - range.start) * rowHeight;
 
-    let style = {
-      height: height,
-      marginTop: marginTop
-    };
-
     let removeConfirm;
 
     if (this.state.deletingItem) {
@@ -147,9 +142,21 @@ let EntityTableBody = React.createClass({
       );
     }
 
+    let styles = {
+      body: {
+        height: 'calc(100% - 40px)',
+        overflow: 'scroll',
+        marginTop: '40px',
+      },
+      scroll: {
+        height: height,
+        marginTop: marginTop
+      }
+    };
+
     return (
-      <div className="entity__table__body" onScroll={this._didScroll} ref="body">
-        <div className="entity__table__scroll" style={style}>
+      <div style={styles.body} onScroll={this._didScroll} ref="body">
+        <div style={styles.scroll}>
           {rows}
         </div>
         <EntityForm

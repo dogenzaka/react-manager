@@ -5,6 +5,7 @@ import _ from 'lodash';
 import i18n from '../../i18n';
 
 import SchemaItem from './SchemaItem.jsx';
+import { Theme } from '../../styles';
 
 let SchemaObject = React.createClass({
 
@@ -41,8 +42,9 @@ let SchemaObject = React.createClass({
   },
 
   render() {
-    let { name, schema, value, path, errors } = this.props;
+    let { name, schema, value, path, errors, depth } = this.props;
     value = value || {};
+    depth = depth || 0;
     let items = _.map(schema.properties, (schema, name) => {
       let itemPath = path + '/' + name;
       let error;
@@ -64,15 +66,38 @@ let SchemaObject = React.createClass({
         value={value[name]}
         parentValue={value}
         schema={schema}
+        depth={depth+1}
         error={error}
         mini={this.props.mini}
         onChange={this._didChange}
         onSubmit={this._didSubmit} />;
     });
     this.state.items = items;
+
+    let styles = {
+      object: {
+        position: 'relative',
+        margin: '10px 0 0 0',
+        display: 'flex',
+        flexWrap: 'wrap',
+        width: '100%',
+      },
+      title: {
+        color: Theme.palette.textSecondColor,
+        position: 'absolute',
+        background: '#fff',
+        top: '-8px',
+        left: '-4px',
+        padding: '4px',
+      },
+    };
+    if (depth > 0) {
+      styles.object.borderLeft = '1px solid ' + Theme.palette.borderColor;
+    }
+
     return (
-      <div className="schema-form__item schema-form__item--object row row-wrap">
-        <div className="schema-form__item--object__title">{i18n(name)}</div>
+      <div style={styles.object}>
+        <div style={styles.title}>{i18n(name)}</div>
         {items}
       </div>
     );

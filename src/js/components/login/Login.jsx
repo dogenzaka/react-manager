@@ -42,11 +42,15 @@ export default React.createClass({
   },
 
   render() {
+
+    let style = {
+      height: 'calc(100% - 64px)',
+      padding: '64px 20px',
+    };
+
     return (
-      <div id="main">
-        <div className="login">
-          <RouteHandler />
-        </div>
+      <div style={style}>
+        <RouteHandler />
       </div>
     );
   }

@@ -64,10 +64,17 @@ let EntityTableRow = React.createClass({
       { payload: item, text: i18n('Delete'), iconClassName: 'md-delete md-15x' },
     ];
 
+    let style = {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'stretch',
+    };
+
     return (
-      <div className="entity__table__body__row">
+      <div style={style}>
         {columns}
-        <RowMenu items={controlItems} onClickItem={this._didClickRowMenu} />
+        <RowMenu items={controlItems} onClickItem={this._didClickRowMenu} style={{position: 'relative', padding:'0 2px 0 8px'}} />
       </div>
     );
   },

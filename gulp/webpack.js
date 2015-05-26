@@ -18,7 +18,7 @@ gulp.task('webpack', function() {
     },
     cache: true,
     debug: !production,
-    devtool: production ? '' : 'inline-source-map',
+    devtool: production ? '' : 'source-map',
     module: {
       loaders: [
         { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?stage=0' }

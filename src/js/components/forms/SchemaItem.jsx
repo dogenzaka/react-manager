@@ -12,7 +12,6 @@ let SchemaItem = React.createClass({
     schema: React.PropTypes.object,
     value: React.PropTypes.any,
     depth: React.PropTypes.number,
-    cols: React.PropTypes.number,
     mini: React.PropTypes.bool,
     error: React.PropTypes.object,
     errors: React.PropTypes.array,
@@ -41,7 +40,7 @@ let SchemaItem = React.createClass({
   },
 
   getChildProps() {
-    return _.pick(this.props, 'name','value','schema','cols','mini');
+    return _.pick(this.props, 'name','value','schema','mini','depth');
   },
 
   /**

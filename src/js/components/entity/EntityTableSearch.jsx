@@ -2,16 +2,19 @@
 
 import React from 'react';
 
-import { IconButton } from 'material-ui';
+import { IconButton, Paper } from 'material-ui';
 import { toggleSearch, getEntityItems } from '../../actions/EntityAction';
 import SchemaForm from '../forms/SchemaForm.jsx';
 import EntityStore from '../../stores/EntityStore';
+
+import { Theme } from '../../styles';
 
 let EntityTableSearch = React.createClass({
 
   getInitialState() {
     return {
-      height: 0
+      height: 0,
+      query: {},
     };
   },
 
@@ -21,12 +24,13 @@ let EntityTableSearch = React.createClass({
   componentDidMount() {
     EntityStore.addListener(this._setState);
     if (this.refs.form) {
-      this.state.height = this.refs.form.getDOMNode().clientHeight;
+      this.state.height = React.findDOMNode(this.refs.form).clientHeight;
     }
   },
 
   componentWillUnmount() {
     EntityStore.removeListener(this._setState);
+    this.state.query = {};
   },
 
   componentWillUpdate() {
@@ -34,8 +38,12 @@ let EntityTableSearch = React.createClass({
 
   componentDidUpdate() {
     if (this.refs.form) {
-      this.state.height = this.refs.form.getDOMNode().clientHeight;
+      this.state.height = React.findDOMNode(this.refs.form).clientHeight;
     }
+  },
+
+  componentWillReceiveProps() {
+    this.state.query = {};
   },
 
   _setState(state) {
@@ -50,40 +58,56 @@ let EntityTableSearch = React.createClass({
 
     let spec = this.props.spec;
 
-    let icon;
-    if (spec.features.search) {
-      icon = (
-        <div className="entity__menu__search__icon">
-          <IconButton iconClassName="md-search md-2x" onClick={this._didClick} />
-        </div>
-      );
-    } else {
-      return <div />;
+    if (!spec.features.search) {
+      return <div/>;
     }
 
-    let height = 0;
-    if (this.state.showSearch) {
-      height = this.state.height;
-    }
+    let styles = {
+      icon: {
+        position: 'absolute',
+        zIndex: 11,
+        right: '4px',
+        top: '8px',
+      },
+      body: {
+      },
+      search: {
+        position: 'absolute',
+        top: '40px',
+        right: '0px',
+        width: '400px',
+        overflow: 'hidden',
+        height: ((this.state.showSearch) ? this.state.height+40 : 0) + 'px',
+        transition: 'height 0.3s cubic-bezier(0.39, 0.58, 0.59, 0.96)',
+        padding: '16px 8px 0px 8px',
+        zIndex: 5,
+      },
+    };
 
-    let style = { height: height };
+    let iconClass = this.state.showSearch ? 'md-close' : 'md-search';
+    let icon = (
+      <div style={styles.icon}>
+        <IconButton iconClassName={iconClass + ' md-2x'} iconStyle={{color:Theme.palette.textLightColor}} onClick={this._didClick} />
+      </div>
+    );
 
     let schema = this.props.spec.features.search.schema || {
       type: 'object', properties: { query: 'string' }
     };
 
     return (
-      <div className="entity__menu__search" ref="body" style={style}>
+      <div style={styles.body}>
         {icon}
-        <div className="entity__menu__search__form">
+        <Paper style={styles.search}>
           <SchemaForm
             ref="form"
             name="search"
             mini={true}
             schema={schema}
+            value={this.state.query}
             onChange={this._didChange}
           />
-        </div>
+        </Paper>
       </div>
     );
   },
