@@ -51,12 +51,10 @@ export default React.createClass({
           className={className}
           title={this.state.title}
           zDepth={1}
-          onMenuIconButtonTouchTap={this._didTapMenuIcon} />
+          onLeftIconButtonTouchTap={this._didTapMenuIcon} />
       </header>
     );
 
   }
 
 });
-
-

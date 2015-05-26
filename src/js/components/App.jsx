@@ -13,6 +13,8 @@ import { setTitle } from '../actions/HeaderAction';
 
 let App = React.createClass({
 
+  mixins: [require('../mixins/ChildContextMixin')],
+
   contextTypes: {
     router: React.PropTypes.func
   },

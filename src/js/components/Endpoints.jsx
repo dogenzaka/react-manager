@@ -17,6 +17,8 @@ let { Dialog, FontIcon } = mui;
 
 export default React.createClass({
 
+  mixins: [require('../mixins/ChildContextMixin')],
+
   contextTypes: {
     router: React.PropTypes.func
   },
@@ -109,17 +111,19 @@ export default React.createClass({
   },
 
   _didClickAdd() {
-    this._dialog = React.render(
-      <Dialog key={this.getDialogKey()} title={i18n('Add an endpoint')} onDismiss={this._didDismissDialog}>
-        <SchemaForm
-          schema={this.schema}
-          value={{}}
-          onSubmit={this._didSubmitAdd}
-          onCancel={this._didCancel}
-        />
-      </Dialog>, document.getElementById("dialog"));
-    this._dialog.show();
-    this.refs.floatingMenu.rotateIcon(true);
+    React.withContext(this.getChildContext(), () => {
+      this._dialog = React.render(
+        <Dialog key={this.getDialogKey()} title={i18n('Add an endpoint')} onDismiss={this._didDismissDialog}>
+          <SchemaForm
+            schema={this.schema}
+            value={{}}
+            onSubmit={this._didSubmitAdd}
+            onCancel={this._didCancel}
+          />
+        </Dialog>, document.getElementById("dialog"));
+      this._dialog.show();
+      this.refs.floatingMenu.rotateIcon(true);
+    });
   },
 
   _didSubmitAdd(endpoint) {
@@ -150,16 +154,19 @@ export default React.createClass({
     e.stopPropagation();
     if (i === 0) {
       // Edit
-      this._dialog = React.render(
-        <Dialog key={this.getDialogKey()} title={i18n('Edit an endpoint')} onDismiss={this._didDismissDialog}>
-          <SchemaForm
-            schema={this.schema}
-            value={item.payload}
-            onSubmit={this._didSubmitEdit}
-            onCancel={this._didCancel}
-          />
-        </Dialog>, document.getElementById("dialog"));
-      this._dialog.show();
+      React.withContext(this.getChildContext(), () => {
+        this._dialog = React.render(
+          <Dialog key={this.getDialogKey()} title={i18n('Edit an endpoint')} onDismiss={this._didDismissDialog}>
+            <SchemaForm
+              schema={this.schema}
+              value={item.payload}
+              onSubmit={this._didSubmitEdit}
+              onCancel={this._didCancel}
+            />
+          </Dialog>, document.getElementById("dialog")
+        );
+        this._dialog.show();
+      });
     }
     if (i === 1) {
       // Remove
@@ -168,4 +175,3 @@ export default React.createClass({
   },
 
 });
-
