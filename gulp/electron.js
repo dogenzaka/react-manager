@@ -1,6 +1,6 @@
 
 var gulp = require('gulp');
-var electron = require('gulp-atom-shell');
+var electron = require('gulp-atom-electron');
 
 gulp.task('electron', ['build', 'electron_mac', 'electron_win32', 'electron_win64']);
 
