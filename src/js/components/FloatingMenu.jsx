@@ -20,13 +20,28 @@ export default React.createClass({
   render() {
 
     let pos = this.props.position || "bottom";
-    let rotated = this.state.rotated ? " rotated":"";
+    let rotated = this.state.rotated ? " rotate45":"";
     let mini = pos === "top" ? true : false;
     let iconClass = "md-add";
 
+    let style = pos === "top" ? {
+      position: 'fixed',
+      top: '88px',
+      left: '16px',
+      width: '56px',
+      zIndex: 5,
+    } : {
+      position: 'fixed',
+      bottom: '20px',
+      right: '16px',
+      textAlign: 'right',
+      width: '56px',
+      zIndex: 2,
+    };
+
     return (
-      <div className={"floating-menu floating-menu--"+pos}>
-        <FloatingActionButton mini={mini} iconClassName={iconClass + " md-2x"+rotated} onClick={this._didClickAdd} zDepth={1} />
+      <div style={style}>
+        <FloatingActionButton mini={mini} iconClassName={iconClass + " md-2x "+rotated} onClick={this._didClickAdd} zDepth={1} styles={{animationDuration:'0.5s'}} />
       </div>
     );
   },

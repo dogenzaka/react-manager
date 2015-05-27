@@ -55,7 +55,7 @@ let SchemaText = React.createClass({
     }
 
     return (
-      <div className={"schema-form__item schema-form__item--text cols-"+cols}>
+      <div className={"cols-"+cols} style={{padding:'0 0 0 8px', boxSizing:'border-box'}}>
         <TextField
           type={type}
           ref="text"
@@ -63,6 +63,7 @@ let SchemaText = React.createClass({
           errorText={error && error.message}
           value={this.state.value}
           floatingLabelText={floatingText}
+          style={{width:'100%'}}
           onKeyDown={this._didKeyDown}
           onChange={this.validate} />
       </div>

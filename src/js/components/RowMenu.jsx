@@ -3,6 +3,8 @@
 import React from 'react';
 import mui from 'material-ui';
 
+import { Theme } from '../styles';
+
 let { IconButton, Menu } = mui;
 let { ClickAwayable, Classable } = mui.Mixins;
 
@@ -32,12 +34,6 @@ export default React.createClass({
     };
   },
 
-  componentDidMount() {
-  },
-
-  componentWillUnmount() {
-  },
-
   componentClickAway() {
     this.setState({ open: false });
   },
@@ -50,19 +46,34 @@ export default React.createClass({
     }
   },
 
+  styles: {
+    menu: {
+      position: 'absolute',
+      right: '2px',
+    },
+    icon: {
+      color: Theme.palette.textColor,
+    },
+    item: {
+      paddingLeft: '16px',
+    },
+    itemIcon: {
+      lineHeight: '32px',
+      color: Theme.palette.textSecondColor,
+    },
+  },
+
   render() {
 
     let items = this.props.items || [];
     let menuItems = items.map(item => {
       return item;
     });
-    let classes = this.getClasses('mui-drop-down-menu row-menu', {
-      'mui-open': this.state.open
-    });
+    let style = this.props.style;
 
     return (
-      <div className={classes}>
-        <IconButton iconClassName="md-more-vert md-2x" onClick={this._didClick} />
+      <div style={style}>
+        <IconButton iconClassName="md-more-vert md-2x" style={this.styles.icon} onClick={this._didClick} />
         <Menu
           ref="menu"
           autoWidth={true}
@@ -70,6 +81,8 @@ export default React.createClass({
           hideable={true}
           visible={this.state.open}
           onItemClick={this._didClickItem}
+          style={this.styles.menu}
+          menuItemStyle={this.styles.item}
         />
       </div>
     );

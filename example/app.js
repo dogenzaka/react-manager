@@ -212,7 +212,7 @@ var specs = {
               type: 'string',
               enum: ['Japan','Nepal','India']
             },
-            zipCode: { type: 'number', cols: 4 },
+            zipCode: { type: 'string', cols: 4 },
             city: { type: 'string', cols: 4 },
             streetAddress: { type: 'string', cols: 4 },
           }

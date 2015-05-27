@@ -33,11 +33,7 @@ let SchemaArrayText = React.createClass({
   },
 
   getValue() {
-    return this.refs.tags.getTags().join(', ');
-  },
-
-  saveTags() {
-    console.info('tags: ', this.refs.tags.getTags().join(', '));
+    return this.refs.tags.getTags();
   },
 
   render() {
@@ -45,10 +41,21 @@ let SchemaArrayText = React.createClass({
     let schema = this.props.schema;
     let error = this.state.error;
     let cols = schema.cols || 12;
+    let styles = {
+      array: {
+        position: 'relative',
+        marginTop: '10px',
+      },
+      label: {
+        lineHeight: '36px',
+        marginRight: '10px',
+        color: 'rgba(0,0,0,0.5)',
+      },
+    };
 
     return (
-      <div className={"schema-form__item schema-form__item--array cols-"+cols}>
-        <label>{i18n(this.props.name)}</label>
+      <div style={styles.array} className={"cols-"+cols}>
+        <label style={styles.label}>{i18n(this.props.name)}</label>
         <TagsInput
           ref="tags"
           placeholder={i18n('Add')}

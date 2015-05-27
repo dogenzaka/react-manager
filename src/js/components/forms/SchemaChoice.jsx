@@ -5,6 +5,7 @@ import React from 'react';
 
 import { FlatButton } from 'material-ui';
 import i18n from '../../i18n';
+import { Theme } from '../../styles';
 
 let SchemaChoice = React.createClass({
 
@@ -39,17 +40,40 @@ let SchemaChoice = React.createClass({
     let labels = schema.enumLabels || schema.enum;
     let cols = schema.cols || 12;
 
+    let styles = {
+      choice: {
+        padding: '24px 0 0 8px',
+        position: 'relative',
+      },
+      label: {
+        lineHeight: '36px',
+        marginRight: '10px',
+        color: 'rgba(0,0,0,0.5)',
+      },
+      error: {
+        fontSize: '12px',
+        position: 'absolute',
+        left: '8px',
+        bottom: '-16px',
+        color: Theme.palette.errorColor,
+      },
+      items: {
+        display: 'flex',
+        flexDirection: 'row',
+      },
+    };
+
     let items = _.map(schema.enum, (key, i) => {
       let label = labels[i];
       if (value === key) {
         return (
-          <div key={key} className="schema-form__item--choice__items__item">
-            <FlatButton type="button" label={i18n(label)} primary={true} onClick={this._didCancel} />
+          <div key={key}>
+            <FlatButton type="button" label={i18n(label)} primary={true} onClick={this._didCancel} style={{fontWeight:'bold'}} />
           </div>
         );
       } else {
         return (
-          <div key={key} className="schema-form__item--choice__items__item">
+          <div key={key}>
             <FlatButton type="button" label={i18n(label)} onClick={this._didClickItem(key)} />
           </div>
         );
@@ -58,18 +82,17 @@ let SchemaChoice = React.createClass({
 
     let error;
     if (this.state.error) {
-      error = <div className="schema-form__item--choice__error">{i18n(this.state.error.message)}</div>;
+      error = <div style={styles.error}>i18n(this.state.error.message)}</div>;
     }
 
-    let className = "schema-form__item schema-form__item--choice cols-" + cols;
     if (this.props.mini) {
-      className += " schema-form__item--choice--mini";
+      styles.choice.paddingTop = '0px';
     }
 
     return (
-      <div className={className}>
-        <label>{i18n(this.props.name)}</label>
-        <div className="schema-form__item--choice__items">{items}</div>
+      <div className={"cols-"+cols} style={styles.choice}>
+        <label style={styles.label}>{i18n(this.props.name)}</label>
+        <div style={styles.items}>{items}</div>
         {error}
       </div>
     );

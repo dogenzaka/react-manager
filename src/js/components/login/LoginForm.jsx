@@ -51,15 +51,19 @@ export default React.createClass({
     let schema = {
       type: 'object',
       properties: {
-        username: 'string',
+        username: { type: 'string', },
         password: { type: 'string', format: 'password' },
       },
       required: ['username','password']
     };
 
+    let style = {
+      maxWidth: '480px',
+    };
+
     return (
-      <div>
-        <h3>Login</h3>
+      <div style={style}>
+        <h3>{i18n('Login')}</h3>
         <SchemaForm
           name="login"
           ref="form"

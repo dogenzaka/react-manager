@@ -4,7 +4,7 @@ import React from 'react';
 import moment from 'moment';
 import i18n from '../../i18n';
 
-import { DatePicker, TextField } from 'material-ui';
+import { DatePicker, TimePicker } from 'material-ui';
 import { ValidateMixin } from './SchemaMixin';
 
 let SchemaDateTime = React.createClass({
@@ -33,8 +33,8 @@ let SchemaDateTime = React.createClass({
 
   getValue() {
     let date = this.refs.picker.getDate();
-    let time = this.refs.time.getValue();
-    return this.formatDate(date) + 'T' + time + moment(date).format('Z');
+    let time = this.refs.time.getTime();
+    return this.formatDate(date) + 'T' + moment(time).format('HH:mm:ssZ');
   },
 
   formatDate(date) {
@@ -45,7 +45,7 @@ let SchemaDateTime = React.createClass({
     if (this.state.value) {
       let date = new Date(this.state.value);
       this.refs.picker.setDate(date);
-      this.refs.time.setValue(moment(date).format('HH:mm:ss'));
+      this.refs.time.setTime(date);
     }
   },
 
@@ -64,23 +64,38 @@ let SchemaDateTime = React.createClass({
       floatingText = i18n(this.props.name);
     }
 
+    let styles = {
+      datetime: {
+        display: 'flex',
+        padding: '0 0 0 8px',
+      },
+      date: {
+        flexGrow: 1,
+      },
+      time: {
+        flexGrow: 1,
+        padding: '0 0 0 8px',
+      },
+    };
+
     return (
-      <div className={"schema-form__item schema-form__item--datetime cols-"+cols}>
-        <div className="schema-form__item--datetime__date">
+      <div className={"cols-"+cols} style={styles.datetime}>
+        <div style={styles.date}>
           <DatePicker
             ref="picker"
             mode="landscape"
             formatDate={this.formatDate}
-            defaultValue=""
             hintText={hintText}
+            style={{width:'100%'}}
             errorText={error && error.message}
             floatingLabelText={floatingText} />
         </div>
-        <div className="schema-form__item--datetime__time">
-          <TextField
+        <div style={styles.time}>
+          <TimePicker
             ref="time"
             hintText={hintText}
-            defaultValue=""
+            format="24hr"
+            style={{width:'100%', paddingTop:'24px'}}
             errorText={error && error.message}
             onChange={this.validate} />
         </div>

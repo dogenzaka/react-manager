@@ -3,60 +3,81 @@
 import _ from 'lodash';
 import React from 'react';
 import i18n from '../i18n';
-import { LeftNav, MenuItem } from 'material-ui';
+import { LeftNav, MenuItem, Paper } from 'material-ui';
 import AuthStore from '../stores/AuthStore';
 import ConfigStore from '../stores/ConfigStore';
+import { Theme } from '../styles';
 
-export default React.createClass({
+class AppLeftNav extends React.Component {
 
-  contextTypes: {
-    router: React.PropTypes.func
-  },
-
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       config: ConfigStore.state.config,
+      user: AuthStore.getUser(),
     };
-  },
+    this._setAuthState = this._setAuthState.bind(this);
+    this._setConfigState = this._setConfigState.bind(this);
+    this._onLeftNavChange = this._onLeftNavChange.bind(this);
+  }
 
   toggle() {
     this.refs.leftNav.toggle();
-  },
-
-  componentWillMount() {
-    this.state.user = AuthStore.getUser();
-  },
+  }
 
   componentDidMount() {
     AuthStore.addListener(this._setAuthState);
     ConfigStore.addListener(this._setConfigState);
-  },
+  }
 
   componentWillUnmount() {
     AuthStore.removeListener(this._setAuthState);
     ConfigStore.removeListener(this._setConfigState);
-  },
+  }
 
   _setAuthState(state) {
     // Authorized user
     this.setState({ user: state.user });
-  },
+  }
 
   _setConfigState(state) {
     this.setState({ config: state.config });
-  },
+  }
 
   render() {
 
+    let styles = {
+      header: {
+        height: '120px',
+        background: Theme.palette.primary2Color,
+      },
+      user: {
+        padding: '20px 0 0 16px',
+      },
+      userPhoto: {
+        width: '60px',
+        height: '60px',
+        borderRadius: '30px',
+        backgroundSize: '60px 60px',
+      },
+      userName: {
+        paddingTop: '10px',
+        fontWeight: 'bold',
+        color: Theme.palette.textLightColor,
+      },
+    };
+
     let header;
     if (this.state.user) {
-      header =
-        <div className="left-header mui-dark-theme mui-paper">
-          <div className="left-header__user">
-            <div className="left-header__user__photo" style={{backgroundImage:"url("+this.state.user.photo+")"}} />
-            <div className="left-header__user__name">{this.state.user.name}</div>
+      styles.userPhoto.backgroundImage = 'url('+this.state.user.photo+')',
+      header = (
+        <Paper style={styles.header}>
+          <div style={styles.user}>
+            <div style={styles.userPhoto}></div>
+            <div style={styles.userName}>{this.state.user.name}</div>
           </div>
-        </div>;
+        </Paper>
+      );
     } else {
       header = <div className="left-header mui-dark-theme mui-paper"></div>;
     }
@@ -74,7 +95,7 @@ export default React.createClass({
         onChange={this._onLeftNavChange}>
       </LeftNav>
     );
-  },
+  }
 
   _getMenuItems() {
     let menuItems = [];
@@ -88,7 +109,7 @@ export default React.createClass({
       menuItems.push({ route: 'logout', text: i18n('Logout') });
     }
     return menuItems;
-  },
+  }
 
   /**
    * Get selected index from current route
@@ -108,14 +129,20 @@ export default React.createClass({
         }
       }
     }
-  },
+  }
 
   /**
    * Click menu item
    */
   _onLeftNavChange(e, key, payload) {
     this.context.router.transitionTo(payload.route, payload.params);
-  },
+  }
 
-});
+}
+
+AppLeftNav.contextTypes = {
+  router: React.PropTypes.func
+};
+
+export default AppLeftNav;
 

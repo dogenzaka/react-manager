@@ -7,35 +7,34 @@ import AppLeftNav from './AppLeftNav.jsx';
 
 let { AppBar } = mui;
 
-export default React.createClass({
+class Header extends React.Component {
 
-  propTypes: {
-    title: React.PropTypes.string,
-    onTapMenu: React.PropTypes.func,
-  },
-
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       title: HeaderStore.state.title,
       subTitle: HeaderStore.state.subTitle,
     };
-  },
+
+    this._setState = this._setState.bind(this);
+    this._didTapMenuIcon = this._didTapMenuIcon.bind(this);
+  }
 
   componentWillMount() {
     HeaderStore.addListener(this._setState);
-  },
+  }
 
   componentWillUnmount() {
     HeaderStore.removeListener(this._setState);
-  },
+  }
 
   _setState(state) {
     this.setState(state);
-  },
+  }
 
   _didTapMenuIcon() {
     this.refs.leftNav.toggle();
-  },
+  }
 
   render() {
 
@@ -44,19 +43,30 @@ export default React.createClass({
       className += ' expanded';
     }
 
+    let style = {
+      position: 'fixed',
+      width: '100%',
+      zIndex: 10,
+    };
+
     return (
-      <header>
+      <header style={style}>
         <AppLeftNav ref="leftNav" />
         <AppBar
           className={className}
           title={this.state.title}
           zDepth={1}
-          onMenuIconButtonTouchTap={this._didTapMenuIcon} />
+          onLeftIconButtonTouchTap={this._didTapMenuIcon} />
       </header>
     );
-
   }
+}
 
-});
+Header.propTypes = {
+  title: React.PropTypes.string,
+  onTapMenu: React.PropTypes.func,
+};
+
+export default Header;
 
 

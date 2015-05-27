@@ -1,7 +1,4 @@
 // imports
-@import "../../node_modules/material-ui/src/less/scaffolding.less";
-@import "material_vars.less";
-@import "../../node_modules/material-ui/src/less/components.less";
 @import "../../bower_components/material-design-iconic-font/less/material-design-iconic-font.less";
 @import "../../node_modules/animate.css/animate.css";
 
@@ -9,14 +6,37 @@ html, body {
   margin: 0;
   height: 100%;
   overflow: hidden;
+  font-size: 90%;
+  font-family: Roboto, sans-serif;
 }
 
-.mui-app-canvas {
-  height: 100%;
+input:focus {
+  outline: 0;
 }
 
 .md-15x {
   font-size: 1.5em;
+}
+
+.rotate45 {
+  transform: rotate(45deg);
+}
+
+.hover:hover {
+  background-color: #ddd;
+}
+
+#main {
+  height: 100%;
+}
+
+@import "./grid.less";
+@import "./tags_input.less";
+
+/*
+
+.mui-app-canvas {
+  height: 100%;
 }
 
 .mui-snackbar.error {
@@ -31,16 +51,11 @@ html, body {
   }
 }
 
-#main {
-  height: 100%;
-}
-
-@import "./grid.less";
 @import "./left_nav.less";
 @import "./floating_menu.less";
 @import "./endpoints.less";
 @import "./row_menu.less";
 @import "./schema_form.less";
-@import "./tags_input.less";
 @import "./login.less";
 @import "./entity.less";
+*/

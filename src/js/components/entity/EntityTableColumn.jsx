@@ -1,6 +1,9 @@
 'use strict';
 
 import React from 'react';
+import _ from 'lodash';
+
+import { Theme } from '../../styles';
 
 let EntityTableColumn = React.createClass({
 
@@ -23,14 +26,40 @@ let EntityTableColumn = React.createClass({
     this.state.value = props.value;
   },
 
+  componentWillUpdate() {
+    this.state.editing = false;
+  },
+
   render() {
 
     let value = this.state.value;
+
+    let styles = {
+      column: {
+        height: '48px',
+        lineHeight: '48px',
+        display: 'block',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        flex: 4,
+        padding: '0 2px 0 8px',
+      },
+      input: {
+        width: '100%',
+        border: 'none',
+        padding: '3px 0',
+        background: 'transparent',
+        color: Theme.palette.primary2Color,
+        borderBottom: '1px solid ' + Theme.palette.accent1Color,
+      },
+    };
 
     if (this.state.editing) {
       value = <input
         ref="input"
         type="text"
+        style={styles.input}
         defaultValue={value}
         onBlur={this._didBlur}
         onKeyUp={this._didKeyUp}
@@ -44,8 +73,7 @@ let EntityTableColumn = React.createClass({
 
     return (
       <div
-        className="entity__table__body__row__column"
-        style={this.props.style}
+        style={_.extend({}, styles.column, this.props.style)}
         onClick={this._didClick}>
         {value}
       </div>

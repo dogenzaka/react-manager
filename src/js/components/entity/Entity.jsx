@@ -26,8 +26,14 @@ let Entity = React.createClass({
   },
 
   render() {
+    let style = {
+      height: 'calc(100% - 64px)',
+      paddingTop: '64px',
+      display: 'flex',
+    };
+
     return (
-      <div className="entity">
+      <div style={style}>
         <EntityMenu />
         <RouteHandler />
       </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { Menu } from 'material-ui';
+import { Menu, Paper } from 'material-ui';
 
 import i18n from '../../i18n';
 import ConfigStore from '../../stores/ConfigStore';
@@ -30,15 +30,30 @@ let EntityMenu = React.createClass({
       { id: entity.id, text: i18n(entity.id) }
     ));
 
+    let styles = {
+      menu: {
+        width: '160px',
+        height: '100%',
+        overflow: 'scroll',
+      },
+      menuItem: {
+        padding: '0 12px',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'auto',
+      },
+    };
+
     return (
-      <div className="entity__menu mui-paper mui-z-depth-1">
+      <Paper style={styles.menu}>
         <Menu
           autoWidth={false}
           menuItems={items}
+          menuItemStyle={styles.menuItem}
           zDepth={0}
           selectedIndex={this._getSelectedIndex(items)}
           onItemClick={this._onMenuSelect} />
-      </div>
+      </Paper>
     );
   },
 
