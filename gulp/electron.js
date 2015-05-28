@@ -1,13 +1,13 @@
 
 var gulp = require('gulp');
-var electron = require('gulp-atom-shell');
+var electron = require('gulp-atom-electron');
 
 gulp.task('electron', ['build', 'electron_mac', 'electron_win32', 'electron_win64']);
 
 gulp.task('electron_mac', function () {
     return gulp.src('./**')
         .pipe(electron({
-                  version: '0.26.0',
+                  version: '0.27.0',
                   platform: 'darwin'
          }))
         .pipe(electron.zfsdest('app_mac.zip'));
@@ -16,7 +16,7 @@ gulp.task('electron_mac', function () {
 gulp.task('electron_win64', function () {
     return gulp.src('./**')
         .pipe(electron({
-                  version: '0.26.0',
+                  version: '0.27.0',
                   platform: 'win32',
                   arch: "x64"
          }))
@@ -26,7 +26,7 @@ gulp.task('electron_win64', function () {
 gulp.task('electron_win32', function () {
     return gulp.src('./**')
         .pipe(electron({
-                  version: '0.26.0',
+                  version: '0.27.0',
                   platform: 'win32',
                   arch: "ia32"
          }))
