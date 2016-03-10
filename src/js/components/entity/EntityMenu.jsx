@@ -33,6 +33,7 @@ let EntityMenu = React.createClass({
     let styles = {
       menu: {
         width: '160px',
+        minWidth: '160px',
         height: '100%',
         overflow: 'scroll',
       },
